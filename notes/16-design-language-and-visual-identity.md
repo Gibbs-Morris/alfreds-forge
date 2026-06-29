@@ -1,5 +1,18 @@
 # Design language and visual identity
 
+## UX technology
+
+The primary client is a **WebAssembly (WASM) application** — consistent with the .NET/Mississippi stack, this means Blazor WASM. The UI runs entirely in the browser with no server-side rendering dependency for the client shell. This gives desktop-class interactivity, real-time SignalR connectivity via Mississippi's Aqueduct layer, and a consistent experience across browsers without app store distribution.
+
+**Long-term: mobile**
+
+A native mobile application is a future consideration — not in scope for the initial build but the design and component model should not preclude it. Implications to carry forward:
+
+- The design language should be defined in tokens (colour, spacing, typography, component semantics), not browser-only assumptions, so it can be adapted to a mobile surface
+- The notification system must support mobile push as a first-class channel when a mobile app exists (see `19-notification-system.md`)
+- Core interaction patterns (chat-first, card inserts, action controls inline) translate naturally to mobile — this should be a deliberate constraint, not an afterthought
+- Responsive layout thinking should be baked into the component library from the start, even if the first target is desktop
+
 ## Design era and feeling
 
 The visual identity should feel like a sophisticated command interface from a near-future era — not retrofuturism, not glossy consumer tech, but the kind of interface an elite operational crew would use in a highly capable vessel or facility. Precision, calm authority, and quiet power. The UI should feel like it belongs to people who are serious about what they are doing.
