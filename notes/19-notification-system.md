@@ -23,6 +23,7 @@ The following events may generate a notification:
 
 **Action required**
 - Warrant pending — a plan, architecture review, or business process approval needs sign-off
+- Enquiry pending — an agent has raised a Knowledge Request and needs a human answer to continue (see `21-agent-knowledge-memory-and-outreach.md`)
 - Commission blocked — a workflow has paused and needs human input to proceed
 - Budget threshold approaching — spend is near a configured limit
 - Rework requested — an Assayer review has returned the work

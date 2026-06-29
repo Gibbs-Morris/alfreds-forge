@@ -35,7 +35,9 @@ This metaphor should inform how we name capabilities, roles, and processes withi
 | **The Ledger** | The billing and cost record |
 | **The Herald** | The coaching agent — helps users communicate intent more clearly |
 | **The Standard** | An instruction pack or policy definition — the rules a commission must meet |
+| **The Armory** | The configuration and policy store — where Standards, workflow definitions, triggers, and model routing rules live |
 | **The Warrant** | A human approval gate — must be issued before the next stage proceeds |
+| **The Enquiry** | An agent-to-human Knowledge Request — a structured question raised mid-workflow to fill a knowledge gap |
 
 ## Two-layer language model
 
@@ -64,6 +66,8 @@ The primary text on any UI element uses plain, functional language. Forge names 
 | Policy / Instruction pack | Standard |
 | Cost record | Ledger |
 | Coach / Advisor | Herald |
+| Configuration / Policy store | Armory |
+| Knowledge Request | Enquiry |
 
 Concepts that are **entirely internal** — Crucible, Wrights, Assayers — should never appear in the business user interface at all. They live in developer documentation, API references, and operational monitoring surfaces.
 

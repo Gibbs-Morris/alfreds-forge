@@ -8,19 +8,19 @@ The platform has no separate "help system." Alfred is the help system. Tutorials
 
 ### First-run experience
 
-When a user joins the platform for the first time, Alfred runs a guided introduction — a structured conversation, not a modal wizard or a tour overlay. He asks what the user is here to do, explains the platform in the user's own terms, and walks them through submitting their first Commission.
+When a user joins the platform for the first time, Alfred runs a guided introduction — a structured conversation, not a modal wizard or a tour overlay. He asks what the user is here to do, explains the platform in the user's own terms, and walks them through creating their first task.
 
 The first-run flow is not a tutorial about features. It is Alfred learning the user's context and the user learning how to communicate with Alfred. Both directions matter.
 
 ### Progressive disclosure
 
-Not everything is shown at once. The first experience is simple: talk to Alfred, see a Commission created, watch it move. Warrants, Standards, Ledger views, campaign-level thinking — these are introduced when they become relevant, not upfront.
+Not everything is shown at once. The first experience is simple: talk to Alfred, see a task created, watch it move. Approval gates, policy packs, cost views, initiative-level grouping — these are introduced when they become relevant, not upfront.
 
-Alfred surfaces new concepts in context: "You've got a few things in flight now — want me to show you how Campaigns help group related work?"
+Alfred surfaces new concepts in context: "You've got a few things in flight now — want me to show you how grouping related tasks into an initiative helps track progress?"
 
 ### Role-based onboarding paths
 
-Business users, engineers, and platform administrators have different first-run experiences, shaped by their role. A business user is onboarded into the Commission/Campaign model and the approval flow. A developer is onboarded into the repository connection, Standards configuration, and build output reading. An admin is onboarded into the Armory, RBAC setup, and environment configuration.
+Business users, engineers, and platform administrators have different first-run experiences, shaped by their role. A business user is onboarded into the task/initiative model and the approval flow. A developer is onboarded into the repository connection, policy pack configuration, and build output reading. An admin is onboarded into the configuration store, RBAC setup, and environment configuration.
 
 Alfred adapts his introduction based on the role assigned at provisioning.
 

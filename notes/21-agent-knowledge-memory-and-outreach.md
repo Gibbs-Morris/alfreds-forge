@@ -158,7 +158,9 @@ Memory is not dumped wholesale — Alfred selects relevant entries based on the 
 
 Memory entries are versioned and attributed. Every write records who (or which agent) wrote it, when, and in what context. Entries can be challenged and corrected by authorised users.
 
-Memory at the org level is change-controlled — modifications require appropriate RBAC permissions and are logged in the Chronicle.
+Memory at the org level is change-controlled — modifications require appropriate RBAC permissions and are logged in the Chronicle. See `12-identity-rbac-and-access-control.md` for the permission model.
+
+**Memory vs artifacts:** Memory is structured, queryable knowledge that persists and accumulates. Artifacts are point-in-time records of what a specific workflow stage consumed and produced. Both are needed; neither replaces the other. See `14-session-artifact-store.md` for the artifact model.
 
 ---
 
