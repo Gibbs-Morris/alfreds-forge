@@ -4,14 +4,31 @@
 
 The primary client is a **WebAssembly (WASM) application** — consistent with the .NET/Mississippi stack, this means Blazor WASM. The UI runs entirely in the browser with no server-side rendering dependency for the client shell. This gives desktop-class interactivity, real-time SignalR connectivity via Mississippi's Aqueduct layer, and a consistent experience across browsers without app store distribution.
 
-**Long-term: mobile**
+**Long-term: mobile via .NET MAUI Blazor Hybrid**
 
-A native mobile application is a future consideration — not in scope for the initial build but the design and component model should not preclude it. Implications to carry forward:
+A native mobile application is a future consideration — not in scope for the initial build. The good news: the .NET ecosystem has a well-supported path that avoids a component rewrite.
 
-- The design language should be defined in tokens (colour, spacing, typography, component semantics), not browser-only assumptions, so it can be adapted to a mobile surface
-- The notification system must support mobile push as a first-class channel when a mobile app exists (see `19-notification-system.md`)
-- Core interaction patterns (chat-first, card inserts, action controls inline) translate naturally to mobile — this should be a deliberate constraint, not an afterthought
-- Responsive layout thinking should be baked into the component library from the start, even if the first target is desktop
+The strategy is a **Razor Class Library (RCL)** — a shared component library that is referenced by both the Blazor WASM web app and a future .NET MAUI Blazor Hybrid mobile app. Microsoft's recommended pattern as of .NET 8/9.
+
+```
+/Alfred.UI.Shared    ← Razor Class Library — all reusable components, pages, models
+/Alfred.UI.Web       ← Blazor WASM host (web)
+/Alfred.UI.MAUI      ← .NET MAUI Blazor Hybrid host (iOS / Android) — future
+```
+
+The MAUI host embeds a `BlazorWebView` and renders the same Razor components natively. Platform-specific services (push notifications, device APIs, file access) are swapped in via dependency injection — the shared components never know which host they are running in.
+
+**Implications to carry forward from day one:**
+
+- Build all components in the shared RCL from the start — no web-only components in the WASM host
+- Keep components platform-neutral; use DI interfaces for anything device-specific
+- Design tokens (colour, spacing, typography) rather than hardcoded CSS values — mobile will need adaptation
+- The chat-first + card insert pattern translates directly to mobile form factors — preserve this as a deliberate constraint
+- The notification system must support mobile push as a first-class channel when the MAUI app exists (see `19-notification-system.md`)
+
+**PWA as an interim mobile option**
+
+Before a native MAUI app ships, Blazor WASM can be deployed as a **Progressive Web App (PWA)** — installable on mobile home screens, with offline support and basic push notification capability via browser APIs. This gives a reasonable mobile experience with zero additional build effort, and acts as a bridge until a native app is warranted.
 
 ## Design era and feeling
 
