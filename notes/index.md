@@ -34,7 +34,8 @@ This folder is the working space for idea exploration in this session.
 16. `17-alfred-and-naming-world.md` - Alfred's character, the forge metaphor, two-layer language model
 17. `18-onboarding-tutorials-and-feedback.md` - onboarding flows, contextual help, A/B experimentation
 18. `19-notification-system.md` - notification taxonomy, delivery channels, Alfred as notification layer
-19. `06-mississippi-and-clean-squad-capability-brief.md` - source capability grounding
+19. `20-workflow-triggers.md` - trigger types (manual/scheduled/event/threshold), org-scope triggers, RBAC
+20. `06-mississippi-and-clean-squad-capability-brief.md` - source capability grounding
 
 ## Supporting notes
 
