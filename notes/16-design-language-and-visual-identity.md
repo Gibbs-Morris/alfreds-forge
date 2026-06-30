@@ -121,9 +121,25 @@ Alfred speaks plain English in conversation. The futuristic aesthetic and the na
 
 See `17-alfred-and-naming-world.md` for the two-layer language model.
 
-## Striking the balance
+## Design discipline: task-focused surfaces
 
-Futuristic must not mean obscure.
+Every screen and interaction should be designed around the specific task at hand, not generic data presentation.
+
+This means:
+
+| Anti-pattern | Correct approach |
+|---|---|
+| Generic data grid with 10 right-click options | Context-specific view showing exactly what's needed for the current task |
+| Bloated settings panel with every option visible | Progressive disclosure: show defaults, advanced options hidden until needed |
+| Menu with 15 actions all equally prominent | Action hierarchy: primary action obvious, secondary actions available but not intrusive |
+| Dense information overload | Signal hierarchy: what matters now is prominent, context lives in cards/tooltips |
+| Right-click menus with unclear options | Inline actions that make sense in context; destructive actions require explicit confirmation |
+
+**Principle:** If a user is reviewing evidence for approval, show the evidence and approval controls — not a generic evidence browser with 20 filtering options visible by default. If they're creating a task, guide them through the refinement with Alfred — not a form with 30 fields.
+
+The interface should feel like a capable tool shaped to the work, not a generic platform that forces users to navigate and construct their own experience.
+
+
 
 The interface should feel ahead of its time, but every interaction must be immediately legible. Business users and engineers alike need to operate it without a learning curve on the chrome itself — the cognitive load belongs to the work, not the UI.
 
