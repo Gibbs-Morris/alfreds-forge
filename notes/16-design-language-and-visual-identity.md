@@ -79,6 +79,24 @@ Within the chat stream, structured content surfaces as **cards** — inline inse
 
 Cards should feel like information panels integrated into the conversation — not popups, not separate views, but part of the flow. They should inherit the same dark/blue design language as the surrounding chrome.
 
+## Secondary interface: task-based board and management
+
+Alongside the primary chat interface, a **task board** surface provides a traditional work management view for users who prefer scanning and filtering over conversation.
+
+The board shows:
+- **Column structure**: backlog, in-progress, in-review, blocked, completed (or custom workflow states)
+- **Task cards**: one card per task/Commission, with status, assignee, priority, due date, cost, evidence summary
+- **Filtering and sorting**: by status, assignee, priority, cost, date, team, repository
+- **Quick actions**: drag-to-change-status, inline approval, cost drill-down, evidence view
+- **Search**: find tasks by name, description, or connected artifact
+- **Bulk operations**: batch approve, batch close, batch reassign
+
+The board is **not** the primary interface — it's a secondary surface for power users and project leads. Alfred in the chat remains the primary interaction model for most users.
+
+The board and chat are **always synchronized** — actions in one surface instantly reflect in the other. A task moved to "in-review" in the board immediately surfaces that state in the chat. An approval given in chat reflects on the task card.
+
+**Design language:** The board inherits the same OLED/blue/semantic-accent palette and typography. Task cards use the same visual language as chat cards — ambient depth, glow on active states, semantic colour for status at a glance.
+
 ## Motion and animation
 
 - transitions should be purposeful and fast — no decorative flourishes
