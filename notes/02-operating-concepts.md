@@ -15,7 +15,7 @@ Alfred's Forge has clear ownership over specific surfaces. Being explicit about 
 
 ## Human approval gates
 
-The platform should support human approval as a first-class concept within the app — for pre-build artefacts that are not code.
+The platform should support human approval as a first-class concept within the app — for pre-build artifacts that are not code.
 
 Examples of things that should be approvable inside Alfred's Forge:
 
@@ -31,7 +31,7 @@ When work reaches the SDLC execution phase and produces code, human review defer
 
 The rule of thumb:
 
-- **pre-code artefacts** → approve inside Alfred's Forge
+- **pre-code artifacts** → approve inside Alfred's Forge
 - **code** → approve in GitHub/SCM via PR
 - **non-SDLC business processes** → approve entirely inside Alfred's Forge, no SCM involved
 

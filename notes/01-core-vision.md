@@ -8,12 +8,11 @@ Alfred's Forge will use the Mississippi framework as its core control plane, wit
 
 Alfred's Forge is:
 
-- an open-source core
+- a SaaS-first platform with self-hosted deployment as a first-class option
 - an AI engineering concierge
 - a system that turns structured delivery contracts into tested pull requests with evidence
-- a foundation that can later grow into a hosted SaaS with managed runners, governance, and enterprise value-add
-- a platform that must eventually operate its own scalable execution fabric rather than depend only on manual or single-node execution
-- enterprise-first from day one, while still designed to scale down for smaller teams or lighter governance contexts
+- a platform built to operate at enterprise scale with governed execution and observable delivery
+- enterprise-first from day one, while still designed to support simpler adoption contexts
 
 ## Strategic identity
 

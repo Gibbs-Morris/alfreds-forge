@@ -25,7 +25,7 @@ Alfred's Forge is an enterprise-first, opinionated dark factory that converts st
    - Mississippi-based coordination core
    - event/queue backbone (Kafka reference standard) for dispatch and lifecycle signalling
    - agentic worker behaviour bounded by explicit orchestration rules
-   - Warrant gates (human approval) for pre-code artefacts; GitHub PR for code review
+   - Warrant gates (human approval) for pre-code artifacts; GitHub PR for code review
    - Enquiry system (Knowledge Requests): agents can park mid-workflow and reach out to humans via the People Directory
 
 4. **Knowledge and memory layer**
@@ -57,7 +57,7 @@ Alfred's Forge is an enterprise-first, opinionated dark factory that converts st
 - Configuration flexibility must not collapse product opinionation.
 - Governance, quality, and economic traceability are part of delivery, not optional extras.
 - Human review of code lives in GitHub. The platform owns everything before and after the PR — not the review itself.
-- Human approval of pre-build artefacts (plans, architecture, experiments) lives inside the platform via Warrants.
+- Human approval of pre-build artifacts (plans, architecture, experiments) lives inside the platform via Warrants.
 - For non-SDLC business processes, in-app Warrants are the only approval surface — no SCM involved.
 - SaaS and self-hosted are deployment modes of the same product, not divergent builds.
 - Secrets never live in GitOps — hard infosec boundary.

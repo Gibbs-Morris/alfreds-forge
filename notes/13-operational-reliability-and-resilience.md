@@ -20,7 +20,7 @@ All platform-owned data must be backed up:
 - backlog, work items, and session state
 - audit and billing ledgers
 - workflow definitions and instruction packs
-- run history, evidence artefacts, and cost records
+- run history, evidence artifacts, and cost records
 - RBAC/identity configuration
 
 Backup requirements:
