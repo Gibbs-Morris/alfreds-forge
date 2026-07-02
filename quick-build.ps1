@@ -5,6 +5,9 @@
     Performs a fast, strict build by invoking final-build-solutions.ps1.
 #>
 
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $finalBuildScript = Join-Path $scriptDir 'eng\src\agent-scripts\final-build-solutions.ps1'
 

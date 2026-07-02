@@ -10,6 +10,9 @@ param(
     [string]$Configuration = 'Release'
 )
 
+Set-StrictMode -Version Latest
+$ErrorActionPreference = 'Stop'
+
 $repoRoot = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $orchestrateScript = Join-Path $repoRoot 'eng\src\agent-scripts\orchestrate-solutions.ps1'
 
