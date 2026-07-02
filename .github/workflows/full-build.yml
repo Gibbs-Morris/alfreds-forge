@@ -1,0 +1,52 @@
+name: "Build (perfect)"
+on:
+  workflow_dispatch:
+  merge_group:
+  pull_request:
+    branches:
+      - main
+      - feature/**
+      - topic/**
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  CONFIGURATION: Release
+
+jobs:
+  Build:
+    name: "Build"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Cache nugets
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/packages.*.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/packages.*.lock.json') }}
+
+      - name: Restore dotnet packages
+        run: |
+          dotnet restore ${{ github.workspace }}/alfreds-forge.slnx
+
+      - name: Build dotnet projects
+        run: |
+          dotnet build ${{ github.workspace }}/alfreds-forge.slnx --configuration ${{ env.CONFIGURATION }} --no-restore --no-incremental -warnaserror
+
+      - name: Run tests
+        run: |
+          dotnet test ${{ github.workspace }}/alfreds-forge.slnx --configuration ${{ env.CONFIGURATION }} --no-restore --no-build
