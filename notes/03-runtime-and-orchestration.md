@@ -117,7 +117,7 @@ It is a coordinated delivery system with:
 ## Open design questions
 
 - what the minimum viable prebuilt worker image contains
-- where jobs execute in open-source versus SaaS modes
+- where jobs execute in self-hosted versus SaaS modes
 - whether the queue backbone is domain-event-oriented, job-oriented, or both
 - how much of the orchestration model belongs in Mississippi versus Alfred's Forge itself
 - whether Kafka is the initial standard or simply the enterprise reference point

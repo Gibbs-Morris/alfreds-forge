@@ -1,18 +1,12 @@
 # Workflow engine and process model
 
-## Key input from prior work
-
-There is prior workflow-engine thinking from `Gibbs-Morris/clean-squad` that should be pulled forward into Alfred's Forge.
-
-The goal is not to copy implementation details blindly, but to carry over the strongest concepts into this platform's core architecture.
-
-Capability evidence from both source repositories is summarized in `06-mississippi-and-clean-squad-capability-brief.md`.
-
 ## Core product stance
 
-The workflow-style engine should be a core capability, not a side feature.
+The workflow-style engine is a core capability of Alfred's Forge, not a side feature.
 
-That engine should allow users to define, adapt, and govern their own SDLC shape, while Alfred's Forge still provides a strong default out-of-the-box path.
+The first-principles reason: a dark factory is only as flexible as the process it can express. If the lifecycle is hardcoded, the platform serves one team's way of working. If the lifecycle is a governed, definable graph, the same platform serves many teams and, eventually, many kinds of process.
+
+So the engine must let users define, adapt, and govern their own SDLC shape, while Alfred's Forge still provides a strong default out-of-the-box path.
 
 ## SDLC definition model
 
@@ -53,7 +47,11 @@ The value is in combining:
 - enforced governance and instruction boundaries
 - opinionated delivery quality and evidence expectations
 
-## CleanSquad capabilities to carry forward
+## Grounding in prior work
+
+This direction is not greenfield speculation. There is prior workflow-engine thinking from `Gibbs-Morris/clean-squad` that should be pulled forward into Alfred's Forge. The goal is not to copy implementation details blindly, but to carry over the strongest proven concepts. Capability evidence from both source repositories is summarized in `06-mississippi-and-clean-squad-capability-brief.md`.
+
+### CleanSquad capabilities to carry forward
 
 Based on current CleanSquad materials, important capabilities to preserve include:
 

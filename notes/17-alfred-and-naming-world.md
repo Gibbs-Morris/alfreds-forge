@@ -31,7 +31,7 @@ This metaphor should inform how we name capabilities, roles, and processes withi
 | **The Crucible** | The workflow execution engine — where commissions are tested by process |
 | **Wrights** | The build/worker agents — those who do the making (as in wheelwright, shipwright) |
 | **Assayers** | The review agents — those who test quality and judge the output |
-| **The Chronicle** | The audit and artifact trail — the permanent record of what was made and how |
+| **The Chronicle** | The audit trail — the permanent record of what was decided, done, and produced (it references artifacts held in the artifact store rather than storing them) |
 | **The Ledger** | The billing and cost record |
 | **The Herald** | The coaching agent — helps users communicate intent more clearly |
 | **The Standard** | An instruction pack or policy definition — the rules a commission must meet |

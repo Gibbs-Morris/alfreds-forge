@@ -1,5 +1,9 @@
 # Session artifact store and virtual workspace
 
+## Bottom line
+
+Alfred's Forge needs a dedicated artifact store — a logically addressable virtual workspace per session/run — that sits alongside the Brooks event stream. Events record what happened; the artifact store holds what was produced and consumed. Neither replaces the other, and the boundary between them must be explicit.
+
 ## The problem
 
 Mississippi's Brooks subsystem handles structured domain events well — small, typed records appended to event streams per aggregate instance. That is the right model for state transitions, decisions, and lifecycle facts.

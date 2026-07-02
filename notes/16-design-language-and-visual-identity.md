@@ -1,5 +1,9 @@
 # Design language and visual identity
 
+## Design vision
+
+Alfred's Forge should feel like a sophisticated command interface from a near-future era — precise, calm, quietly powerful — while remaining immediately legible to business users and engineers alike. The governing principle: **the interface earns trust by how well it works, not just how it looks, and clarity is always the first obligation.** Every choice below — the technology, the OLED-first palette, the chat-with-cards pattern, the task-focused discipline — serves that single aim.
+
 ## UX technology
 
 The primary client is a **WebAssembly (WASM) application** — consistent with the .NET/Mississippi stack, this means Blazor WASM. The UI runs entirely in the browser with no server-side rendering dependency for the client shell. This gives desktop-class interactivity, real-time SignalR connectivity via Mississippi's Aqueduct layer, and a consistent experience across browsers without app store distribution.
@@ -139,7 +143,7 @@ This means:
 
 The interface should feel like a capable tool shaped to the work, not a generic platform that forces users to navigate and construct their own experience.
 
-
+## Striking the balance
 
 The interface should feel ahead of its time, but every interaction must be immediately legible. Business users and engineers alike need to operate it without a learning curve on the chrome itself — the cognitive load belongs to the work, not the UI.
 
