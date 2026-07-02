@@ -6,7 +6,7 @@ applyTo: '.github/agents/cs-*.agent.md'
 
 Governing thought: Every Clean Squad agent applies first-principles thinking and chain-of-verification to every task; governed work shares state through the `.thinking` folder, while the optional Entrepreneur intake stays pre-governed and follows explicit handover protocols.
 
-> Drift check: Review `.github/clean-squad/WORKFLOW.md` before changing Clean Squad process requirements; the workflow remains authoritative for phase boundaries and agent responsibilities.
+> Drift check: Review this file and `.github/instructions/shared-policies.instructions.md` before changing Clean Squad process requirements.
 
 ## Rules (RFC 2119)
 
@@ -25,7 +25,7 @@ Governing thought: Every Clean Squad agent applies first-principles thinking and
 - `currentOwner` **MUST** mean canonical ownership only. Why: Keeps execution control semantics distinct from canonical ownership semantics.
 - Every Phase 9 PR Manager execution slice **MUST** begin with explicit Product Owner delegation that names the bounded task slice and sets `details.expectedOutputPath`, `details.completionSignal`, `details.closureCondition`, `details.allowedActions`, and `details.authorizedTargets` while not transferring canonical ownership. Why: Capability-scoped delegation keeps canonical ownership unambiguous without a Phase 9 handoff boundary.
 - Canonical audit appends **MUST** include canonical `eventUtc`, **MUST** encode the expected prior `sequence` in `appendPrecondition.expectedPriorSequence`, and **MUST** fail closed when the ledger tail does not match. Why: Retry safety, timing derivation, and canonical ownership integrity depend on explicit append preconditions.
-- Canonical audit events **MUST** use the v3 semantic envelope defined in `.github/clean-squad/WORKFLOW.md`; meaningful events **MUST** carry `appendPrecondition`, `workItemId`, `rootWorkItemId`, `spanId`, `causedBy`, `closes`, `outcome`, `artifactTransitions`, and `provenance` whenever the writer-obligation matrix requires them. Why: Reviewer trust depends on explicit canonical semantics rather than chronology-first inference.
+- Canonical audit events **MUST** use the v3 semantic envelope defined in this instruction set; meaningful events **MUST** carry `appendPrecondition`, `workItemId`, `rootWorkItemId`, `spanId`, `causedBy`, `closes`, `outcome`, `artifactTransitions`, and `provenance` whenever the writer-obligation matrix requires them. Why: Reviewer trust depends on explicit canonical semantics rather than chronology-first inference.
 - The Scribe **MUST** compile derived audit artifacts from a stable `workflow-audit.json` snapshot, emit provenance with those artifacts, deterministically emit `workflow-audit.md` with verdict `Untrusted` when inputs are invalid, and **MUST NOT** backfill missing canonical facts from secondary logs. Why: Derived reports are only policy-authoritative when provenance is explicit, canonical gaps remain visible, and invalid input handling is repeatable.
 - Clean Squad agents **MUST** fail closed when reviewer-significant cause, closure, outcome, artifact lineage, or provenance semantics are missing, and **MUST NOT** infer those semantics from `sequence`, `summary`, supporting logs, or evidence paths. Why: The semantics-first v3 contract forbids reconstructing trust-sensitive meaning from non-canonical hints.
 - The Product Owner **MUST** treat the `Reviewer Audit Summary` as stale when the HEAD SHA, required CI-result identity, or reviewer-meaningful canonical facts change, **MUST** record invalidation canonically, **MUST** keep a bounded stale-marker delegation active while a fresh reviewer summary is published or a review-polling wait is active, and merge readiness **MUST NOT** pass on stale, missing, or mismatched provenance. Why: Reviewer-facing audit output is freshness-verifiable within the repo workflow but not tamper-resistant, so stale handling must stay canonical while stale-marker publication remains continuously authorized with no integrity window.
@@ -35,10 +35,10 @@ Governing thought: Every Clean Squad agent applies first-principles thinking and
 - Governed handover prompts **MUST** include the task folder path, objective, constraints, and expected output location. Why: Sub-agents are stateless and need complete context.
 - The Product Owner is the **only** governed agent that communicates directly with the human user; `cs Entrepreneur` is the only pre-governed exception, and all other agents communicate through the `.thinking/` folder and their return message to the invoking agent. Why: Keeps governed orchestration singular while allowing optional public idea shaping.
 - The Product Owner **MUST** use `runSubagent` for all specialist work, including analysis, design, implementation, testing, review, QA, documentation, and PR operations; the Product Owner **MUST NOT** perform that specialist work itself. Why: The Product Owner exists to orchestrate the workflow, question the user, enforce standards, and synthesize delegated outputs rather than bypass the specialist-agent model.
-- Clean Squad delegation **MUST** target only approved Clean Squad agents explicitly named in the `Agent Roster` section of `.github/clean-squad/WORKFLOW.md`. Why: The workflow roster is the single authoritative allowlist and prevents delegation to rogue repo agents.
+- Clean Squad delegation **MUST** target only approved Clean Squad agents explicitly named in this instruction set's roster. Why: The workflow roster is the single authoritative allowlist and prevents delegation to rogue repo agents.
 - Generic delegation phrases such as `review personas`, `domain experts`, or `specialist sub-agents` **MUST** resolve only to named agents in the workflow roster. Why: Category labels are routing shorthand, not permission to improvise new delegation targets.
 - If no approved Clean Squad agent clearly fits a task, the Product Owner **MUST** stop, record the blocker, and ask the user to either choose the nearest approved Clean Squad agent, approve a roster or workflow change first, or explicitly leave Clean Squad orchestration for that task. Why: The approved roster stays authoritative unless the user changes the workflow boundary first or exits Clean Squad orchestration.
-- Agents **MUST** follow the master workflow defined in `.github/clean-squad/WORKFLOW.md`. Why: Ensures process consistency and unambiguous responsibilities.
+- Agents **MUST** follow the master workflow defined in this instruction set. Why: Ensures process consistency and unambiguous responsibilities.
 - Every Clean Squad agent frontmatter `description` **MUST** be written as a routing contract in this order: primary job, `Use when ...`, `Produces ...`, `Not for ...`. Why: The Product Owner needs fast, unambiguous routing cues that distinguish adjacent agents.
 - ADRs **MUST** be recorded for every significant architectural decision using the MADR 4.0.0 template defined in `.github/instructions/adr.instructions.md` and **MUST** be published to `docs/Docusaurus/docs/adr/` by the **cs ADR Keeper**. Why: Preserves institutional knowledge, prevents re-litigation, and surfaces decisions on the documentation site.
 - Clean Code principles (meaningful names, small functions, single responsibility, DRY) **MUST** be applied to all code produced. Why: Code is read 10x more than it is written.
@@ -85,11 +85,4 @@ All Clean Squad agents (files matching `.github/agents/cs-*.agent.md`).
 
 ## References
 
-- Master workflow: `.github/clean-squad/WORKFLOW.md`
-- Chain of Verification: `docs/key-principles/chain-of-verification.md`
-- First Principles: `docs/key-principles/first-principles-thinking.md`
-- Clean Code: `docs/key-principles/clean-code.md`
-- Clean Agile: `docs/key-principles/clean-agile.md`
 - Shared guardrails: `.github/instructions/shared-policies.instructions.md`
-
-

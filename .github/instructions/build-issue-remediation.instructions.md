@@ -19,11 +19,11 @@ Governing thought: Fix each warning/error with the smallest safe edit in at most
 
 ## Scope and Audience
 
-Agents fixing build/analyzer/style issues in Alfred's Forge and Samples solutions.
+Agents fixing build/analyzer/style issues in this repository.
 
 ## At-a-Glance Quick-Start
 
-- Reproduce: `pwsh ./eng/src/agent-scripts/build-Alfred's Forge-solution.ps1` (or Samples equivalent), then `clean-up-*.ps1`.
+- Reproduce: `pwsh ./eng/src/agent-scripts/build-alfreds-forge-solution.ps1`, then `pwsh ./eng/src/agent-scripts/clean-up-alfreds-forge-solution.ps1`.
 - Plan: pick one warning/error code and one file at a time.
 - Fix: smallest edit only; prefer code changes over suppression.
 - Verify: rerun build/cleanup; stop after five attempts per issue and defer with a scratchpad task if still failing.
@@ -45,5 +45,4 @@ Agents fixing build/analyzer/style issues in Alfred's Forge and Samples solution
 
 - Shared guardrails: `.github/instructions/shared-policies.instructions.md`
 - Quality gates: `.github/instructions/build-rules.instructions.md`
-
 

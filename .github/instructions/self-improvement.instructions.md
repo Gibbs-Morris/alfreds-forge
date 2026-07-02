@@ -6,7 +6,7 @@ applyTo: '**'
 
 Governing thought: Agents record validated lessons from real-work failures into typed `self-taught-<domain>.instructions.md` files, creating persistent institutional memory that prevents repeated mistakes without conflicting with hand-authored rules.
 
-> Drift check: Review `.github/agents/rules-manager.agent.md` for the conflict-detection process before adding lessons; open relevant domain instruction files to check for overlap.
+> Drift check: Review this file and `.github/instructions/authoring.instructions.md` for the conflict-detection process before adding lessons; open relevant domain instruction files to check for overlap.
 
 ## Rules (RFC 2119)
 
@@ -98,8 +98,6 @@ Adapted from the Rules Manager workflow:
 
 ## References
 
-- Rules Manager agent: `.github/agents/rules-manager.agent.md`
 - Instruction authoring: `.github/instructions/authoring.instructions.md`
 - Shared guardrails: `.github/instructions/shared-policies.instructions.md`
-
 

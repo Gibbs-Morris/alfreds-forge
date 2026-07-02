@@ -11,55 +11,43 @@ Governing thought: Every change ships only after a clean build, cleanup, tests, 
 ## Rules (RFC 2119)
 
 - Builds **MUST** finish with zero compiler/analyzer warnings; agents **MUST NOT** add `NoWarn`, relax severity, or suppress rules without explicit approval. Why: Zero-warnings is a hard gate.
-- Agents **MUST** run and pass build, cleanup, unit tests, and mutation tests (for Alfred's Forge projects) before calling work complete. Why: Full quality pipeline prevents regressions.
-- For local iteration, agents **SHOULD** run `pwsh ./clean-up-targeted.ps1` against changed files to shorten feedback loops, but full `pwsh ./clean-up.ps1` **MUST** still pass before completion. Why: Faster inner loop without weakening gates.
+- Agents **MUST** run and pass build, cleanup, and unit tests before calling work complete. Why: Full quality pipeline prevents regressions.
+- For local iteration, agents **SHOULD** run targeted `dotnet build`/`dotnet test` commands against changed projects for faster feedback, but full `pwsh ./clean-up.ps1` **MUST** still pass before completion. Why: Faster inner loop without weakening gates.
 - Agents **MUST NOT** add `[SuppressMessage]` or `#pragma warning disable` except for explicitly approved, minimal scopes. Why: Suppressions hide defects.
 - Agents **MUST** keep StyleCop/ReSharper cleanup clean. Why: Consistent formatting enables readable diffs.
 - Solution files **MUST** be edited in `.slnx` form only; `.sln` files **MUST NOT** be hand-edited because automation regenerates them with SlnGen during builds/cleanup for legacy tooling compatibility. Why: Prevents drift between canonical and generated solutions.
-- Alfred's Forge code changes **MUST** add comprehensive tests; Samples changes **SHOULD** add minimal illustrative tests. Why: Maintains coverage expectations per solution type.
-- Alfred's Forge mutation tests **MUST** be allowed to run to completion (plan for ~30 minutes) and **MUST** not be cancelled early. Why: Mutation score enforces assertion quality.
+- Code changes **MUST** add or update tests appropriate to the behavior touched. Why: Maintains confidence in changed behavior.
 - Package versions **MUST** remain in `Directory.Packages.props`; project files **MUST NOT** add `Version` attributes. Why: Central Package Management avoids drift.
 
 ## Scope and Audience
 
-All contributors changing Alfred's Forge or Samples solutions.
+All contributors changing this repository.
 
 ## At-a-Glance Quick-Start
 
-- Build and cleanup (Alfred's Forge):  
-  `pwsh ./eng/src/agent-scripts/build-Alfred's Forge-solution.ps1`  
-  `pwsh ./eng/src/agent-scripts/clean-up-Alfred's Forge-solution.ps1`
-- Tests (Alfred's Forge): `pwsh ./eng/src/agent-scripts/unit-test-Alfred's Forge-solution.ps1`
-- Mutation (Alfred's Forge): `pwsh ./eng/src/agent-scripts/mutation-test-Alfred's Forge-solution.ps1` (wait for completion)
-- Samples equivalents: `build-sample-solution.ps1`, `clean-up-sample-solution.ps1`, `unit-test-sample-solution.ps1`
-- Final gate both solutions: `pwsh ./go.ps1`
-
-Targeted cleanup (iteration only):
-
-- Changed files: `pwsh ./clean-up-targeted.ps1`
-- Explicit list: `pwsh ./clean-up-targeted.ps1 -Files src/Foo/Bar.cs,tests/FooTests.cs`
-- File list: `pwsh ./clean-up-targeted.ps1 -FileListPath .scratchpad/cleanup-files.txt`
-
-Sample benchmark (20 files, 3 runs, `jb cleanupcode --no-build`) shows targeted cleanup around `10.22x` faster than full cleanup (`~59.448s` vs `~607.558s`).
+- Build and cleanup:  
+  `pwsh ./eng/src/agent-scripts/build-alfreds-forge-solution.ps1`  
+  `pwsh ./eng/src/agent-scripts/clean-up-alfreds-forge-solution.ps1`
+- Tests: `pwsh ./eng/src/agent-scripts/unit-test-alfreds-forge-solution.ps1`
+- Final gate: `pwsh ./go.ps1`
 
 ## Core Principles
 
 - Zero warnings always; fix code rather than suppressing.
-- Two solutions: Alfred's Forge (full tests + mutation) vs Samples (minimal illustrative tests, no mutation gate).
-- Use repository scripts for consistent parameters, coverage, mutation reporting, and cleanup.
-- Tests accompany behavior changes; mutation keeps assertions strong.
+- One canonical solution (`alfreds-forge.slnx`) with strict build/test/cleanup gates.
+- Use repository scripts for consistent parameters and cleanup.
+- Tests accompany behavior changes.
 
 ## Procedures
 
 1. Build in Release and fix warnings until clean.
 2. Run cleanup script; resolve any reported issues.
-3. Add/update tests (comprehensive for Alfred's Forge, minimal for Samples).
-4. Run unit tests; for Alfred's Forge, run mutation tests and wait for completion.
+3. Add/update tests for changed behavior.
+4. Run unit tests and address failures.
 5. Re-run build/tests if code changed; finish with `pwsh ./go.ps1` before handoff.
 
 ## References
 
 - Shared guardrails: `.github/instructions/shared-policies.instructions.md`
 - Testing/mutation details: `.github/instructions/testing.instructions.md`
-
 

@@ -22,7 +22,7 @@ Anyone creating or modifying `.csproj` files.
 
 ## Project Naming Conventions
 
-Projects under `src/` follow a consistent naming pattern. `Directory.Build.props` adds `Alfred's Forge.` to package/assembly identity, so folder names stay unprefixed.
+Projects under `src/` follow a consistent naming pattern. `Directory.Build.props` uses `$(MSBuildProjectName)` for package/assembly identity, so folder and project names should already reflect the intended final identity.
 
 ### Naming Rules (RFC 2119)
 
@@ -60,11 +60,10 @@ Layers depend strictly downward. No upward or lateral violations.
 
 - Use `<PackageReference Include="X" />` (no versions); add/remove via `dotnet add/remove package`.
 - Keep only project-specific properties (`OutputType`, `GeneratePackageOnBuild`, etc.).
-- Build to validate: `pwsh ./eng/src/agent-scripts/build-Alfred's Forge-solution.ps1` (or Samples equivalent) or `pwsh ./eng/src/agent-scripts/final-build-solutions.ps1`.
+- Build to validate: `pwsh ./eng/src/agent-scripts/build-alfreds-forge-solution.ps1` (or `pwsh ./build.ps1`) and, for strict final build, `pwsh ./eng/src/agent-scripts/final-build-solutions.ps1`.
 
 ## References
 
 - Shared guardrails: `.github/instructions/shared-policies.instructions.md`
-- Project naming spec: `spec/renaming/target.md`
-
+- Project naming rules: `.github/instructions/naming.instructions.md`
 

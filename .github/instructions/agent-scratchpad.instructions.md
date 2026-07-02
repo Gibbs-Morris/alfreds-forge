@@ -6,7 +6,7 @@ applyTo: '**'
 
 Governing thought: `.scratchpad/` is an ephemeral, untracked workspace for task handoff—never store secrets or couple code to it.
 
-> Drift check: If instructions change, sync Cursor rules via `pwsh ./eng/src/agent-scripts/sync-instructions-to-mdc.ps1`; scripts stay authoritative.
+> Drift check: If instructions change, update matching `.mdc` files in the same change to keep parity.
 
 ## Rules (RFC 2119)
 
@@ -36,5 +36,4 @@ All agents coordinating work locally.
 ## References
 
 - Build remediation attempt cap: `.github/instructions/build-issue-remediation.instructions.md`
-
 
