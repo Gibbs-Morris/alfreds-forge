@@ -25,8 +25,7 @@
         <PackageProjectUrl>https://github.com/Gibbs-Morris/alfreds-forge</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <_ProjectIdentityName Condition="$([System.String]::Copy('$(MSBuildProjectName)').StartsWith('AlfredsForge.'))">$(MSBuildProjectName)</_ProjectIdentityName>
-        <_ProjectIdentityName Condition="'$(_ProjectIdentityName)' == ''">AlfredsForge.$(MSBuildProjectName)</_ProjectIdentityName>
+        <_ProjectIdentityName>$(MSBuildProjectName)</_ProjectIdentityName>
         <PackageId>$(_ProjectIdentityName)</PackageId>
         <AssemblyName>$(_ProjectIdentityName)</AssemblyName>
         <RootNamespace>$(_ProjectIdentityName.Replace(" ", "_"))</RootNamespace>
