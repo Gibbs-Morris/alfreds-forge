@@ -5,6 +5,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Workbench.Domain.L0Tests/Workbench.Domain.L0Tests.csproj" />
+    <Project Path="tests/Workbench.Client.L0Tests/Workbench.Client.L0Tests.csproj" />
   </Folder>
   <Folder Name="/Workflows/">
     <File Path=".github/workflows/full-build.yml" />
