@@ -2,15 +2,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 
-using Orleans.Hosting;
 using Orleans.Runtime;
 
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.UseOrleans();
-
 WebApplication app = builder.Build();
-
 app.MapGet(
     "/health",
     (
@@ -28,5 +25,4 @@ app.MapGet(
                 })
             : Results.StatusCode(503);
     });
-
 await app.RunAsync();
