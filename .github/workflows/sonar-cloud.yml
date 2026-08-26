@@ -18,7 +18,7 @@ env:
   SONAR_PROJECT_KEY: "Gibbs-Morris_alfreds-forge"
   SONAR_ORGANIZATION: "gibbs-morris"
   SONAR_HOST_URL: "https://sonarcloud.io"
-  SONAR_COVERAGE_EXCLUSIONS: "src/Workbench.Client/Program.cs,src/Workbench.Gateway/Program.cs,src/Workbench.Runtime/Program.cs,src/Workbench.AppHost/Program.cs"
+  SONAR_COVERAGE_EXCLUSIONS: "src/Workbench.Client/Program.cs,src/Workbench.Client/App.razor,src/Workbench.Client/Layout/MainLayout.razor,src/Workbench.Gateway/Program.cs,src/Workbench.Runtime/Program.cs,src/Workbench.AppHost/Program.cs"
   CONFIGURATION: Release
   SOLUTION_PATH: ${{ github.workspace }}/alfreds-forge.slnx
 
