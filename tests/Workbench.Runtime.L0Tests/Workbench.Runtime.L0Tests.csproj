@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <!-- Keep marker-only L0 tests independent of the Orleans host dependency graph. -->
+    <Compile Include="..\..\src\Workbench.Runtime\RuntimeAssemblyMarker.cs" Link="RuntimeAssemblyMarker.cs" />
+  </ItemGroup>
+
+</Project>

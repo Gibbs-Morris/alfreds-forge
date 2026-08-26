@@ -9,6 +9,7 @@
     <Project Path="tests/Workbench.Domain.L0Tests/Workbench.Domain.L0Tests.csproj" />
     <Project Path="tests/Workbench.Client.L0Tests/Workbench.Client.L0Tests.csproj" />
     <Project Path="tests/Workbench.Gateway.L0Tests/Workbench.Gateway.L0Tests.csproj" />
+    <Project Path="tests/Workbench.Runtime.L0Tests/Workbench.Runtime.L0Tests.csproj" />
   </Folder>
   <Folder Name="/Workflows/">
     <File Path=".github/workflows/full-build.yml" />
