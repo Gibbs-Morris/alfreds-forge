@@ -7,7 +7,10 @@
     <Project Path="src/AlfredsForge.Runtime/AlfredsForge.Runtime.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/AlfredsForge.Client.L0Tests/AlfredsForge.Client.L0Tests.csproj" />
     <Project Path="tests/Domain.L0Tests/Domain.L0Tests.csproj" />
+    <Project Path="tests/AlfredsForge.Gateway.L0Tests/AlfredsForge.Gateway.L0Tests.csproj" />
+    <Project Path="tests/AlfredsForge.Runtime.L0Tests/AlfredsForge.Runtime.L0Tests.csproj" />
   </Folder>
   <Folder Name="/Workflows/">
     <File Path=".github/workflows/full-build.yml" />

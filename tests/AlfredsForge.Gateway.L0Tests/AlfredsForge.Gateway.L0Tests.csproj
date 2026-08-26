@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\AlfredsForge.Gateway\AlfredsForge.Gateway.csproj" />
+  </ItemGroup>
+
+</Project>
