@@ -1,4 +1,4 @@
-namespace Domain;
+namespace Workbench.Domain;
 
 /// <summary>
 ///     Provides a stable marker for validating core domain assembly wiring.
