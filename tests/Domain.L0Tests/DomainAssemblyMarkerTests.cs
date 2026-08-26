@@ -1,7 +1,7 @@
 using FluentAssertions;
 
 
-namespace AlfredsForge.Domain.L0Tests;
+namespace Domain.L0Tests;
 
 /// <summary>
 ///     Verifies baseline domain assembly marker behavior.
