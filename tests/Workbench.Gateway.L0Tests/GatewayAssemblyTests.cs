@@ -14,6 +14,6 @@ public sealed class GatewayAssemblyTests
     [Fact]
     public void GatewayHostShouldUseWorkbenchAssembly()
     {
-        typeof(Workbench.Gateway.GatewayAssemblyMarker).Assembly.GetName().Name.Should().Be("Workbench.Gateway");
+        typeof(GatewayAssemblyMarker).Assembly.GetName().Name.Should().Be("Workbench.Gateway");
     }
 }
