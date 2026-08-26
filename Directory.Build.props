@@ -43,6 +43,32 @@
         <IsTestProject>true</IsTestProject>
     </PropertyGroup>
 
+    <PropertyGroup Condition="$([System.String]::Copy('$(MSBuildProjectName)').EndsWith('.AppHost'))">
+        <_LockRid
+            Condition="'$(RuntimeIdentifier)' != '' and !$([System.String]::Copy('$(RuntimeIdentifier)').Contains(';'))">
+            $([System.String]::Copy('$(RuntimeIdentifier)').Trim())
+        </_LockRid>
+
+        <_Arch Condition="'$(_LockRid)' == ''">$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant())</_Arch>
+
+        <_BaseOs Condition="'$(_LockRid)' == '' and $([MSBuild]::IsOsPlatform('Windows'))">win</_BaseOs>
+        <_BaseOs Condition="'$(_LockRid)' == '' and $([MSBuild]::IsOsPlatform('Linux'))">linux</_BaseOs>
+        <_BaseOs Condition="'$(_LockRid)' == '' and $([MSBuild]::IsOsPlatform('OSX'))">osx</_BaseOs>
+        <_BaseOs Condition="'$(_LockRid)' == '' and $([MSBuild]::IsOsPlatform('FreeBSD'))">freebsd</_BaseOs>
+
+        <_IsMusl Condition="'$(_BaseOs)' == 'linux' and $([System.IO.File]::Exists('/etc/alpine-release'))">true</_IsMusl>
+        <_IsMusl
+            Condition="'$(_BaseOs)' == 'linux' and '$(_IsMusl)' == '' and $([System.String]::Copy('$([System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier)').Contains('musl'))">
+            true
+        </_IsMusl>
+
+        <_LockRid Condition="'$(_LockRid)' == '' and '$(_BaseOs)' == 'linux' and '$(_IsMusl)' == 'true'">linux-musl-$(_Arch)</_LockRid>
+        <_LockRid Condition="'$(_LockRid)' == '' and '$(_BaseOs)' != ''">$(_BaseOs)-$(_Arch)</_LockRid>
+        <_LockRid Condition="'$(_LockRid)' == ''">$([System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier.ToLowerInvariant())</_LockRid>
+
+        <NuGetLockFilePath Condition="'$(_LockRid)' != ''">$([System.IO.Path]::Combine('$(MSBuildProjectDirectory)', 'packages.$(_LockRid).lock.json'))</NuGetLockFilePath>
+    </PropertyGroup>
+
     <ItemGroup>
         <InternalsVisibleTo Include="$(AssemblyName).Tests" />
         <InternalsVisibleTo Include="$(AssemblyName).UnitTests" />

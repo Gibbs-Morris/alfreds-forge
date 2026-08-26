@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Domain/Domain.csproj" />
+    <Project Path="src/AlfredsForge.AppHost/AlfredsForge.AppHost.csproj" />
     <Project Path="src/AlfredsForge.Client/AlfredsForge.Client.csproj" />
     <Project Path="src/AlfredsForge.Gateway/AlfredsForge.Gateway.csproj" />
     <Project Path="src/AlfredsForge.Runtime/AlfredsForge.Runtime.csproj" />
