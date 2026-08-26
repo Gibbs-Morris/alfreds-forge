@@ -1,5 +1,7 @@
 using FluentAssertions;
 
+using Workbench.Runtime;
+
 
 namespace Workbench.Runtime.L0Tests;
 
@@ -15,5 +17,6 @@ public sealed class RuntimeAssemblyTests
     public void ValueShouldEqualProductName()
     {
         RuntimeAssemblyMarker.Value.Should().Be("AlfredsForge");
+        typeof(RuntimeAssemblyMarker).Assembly.GetName().Name.Should().Be("Workbench.Runtime");
     }
 }
