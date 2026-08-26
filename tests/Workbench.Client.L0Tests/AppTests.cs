@@ -1,7 +1,5 @@
 using FluentAssertions;
 
-using Workbench.Client;
-
 
 namespace Workbench.Client.L0Tests;
 
