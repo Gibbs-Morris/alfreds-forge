@@ -4,18 +4,18 @@ applyTo: 'docs/Docusaurus/docs/**/*.{md,mdx}'
 
 # Documentation Page Focus
 
-Governing thought: Every Alfred's Forge documentation page should serve one reader intent and one page type, even while the repository is still migrating from older feature-oriented layouts.
+Governing thought: Each Alfred's Forge documentation page serves one reader intent and one page type during the migration from feature-oriented layouts.
 
-> Drift check: The canonical page-type model lives in `docs/Docusaurus/docs/contributing/documentation-guide.md`; keep this file aligned with that public guide.
+> Drift check: Keep this file aligned with the canonical page-type model in `docs/Docusaurus/docs/contributing/documentation-guide.md`.
 
 ## Rules (RFC 2119)
 
-- Authors **MUST** classify each page as exactly one of `getting-started`, `tutorials`, `how-to`, `concepts`, `reference`, `operations`, `troubleshooting`, `migration`, or `release-notes` before writing. Why: Structure and evidence requirements depend on the page type.
-- Pages **MUST NOT** blend tutorial, how-to, concept, and reference content into one undifferentiated page. Why: Mixed intent makes navigation and maintenance worse.
-- Each page **MUST** answer one primary question and **MUST** state that answer or scope directly in its opening. Why: Readers should know immediately whether the page matches their need.
-- Page type **MUST** be treated as the writing contract even when physical folder layout still reflects an older feature-oriented structure. Why: Alfred's Forge is in a hybrid transition.
-- If a topic genuinely needs multiple page types, authors **MUST** split it into separate pages and cross-link them. Why: Readers should not dig through irrelevant sections to find the right material.
-- Placement within the docs tree **SHOULD** reinforce the page type when practical, but physical placement **MUST NOT** override the page-type contract. Why: Folder layout is migrating incrementally.
+- Authors **MUST** classify each page as exactly one of `getting-started`, `tutorials`, `how-to`, `concepts`, `reference`, `operations`, `troubleshooting`, `migration`, or `release-notes` before writing. Why: Page type determines structure and evidence.
+- Pages **MUST NOT** combine tutorial, how-to, concept, and reference content into one undifferentiated page. Why: Mixed intent harms navigation and maintenance.
+- Each page **MUST** answer one primary question and **MUST** state the answer or scope in its opening. Why: Readers need to identify the page's purpose immediately.
+- Authors **MUST** treat page type as the writing contract when the physical folder uses an older feature-oriented structure. Why: Alfred's Forge uses a hybrid transition.
+- Authors **MUST** split topics that genuinely need multiple page types into separate, cross-linked pages. Why: Readers should not search through irrelevant sections.
+- Placement in the docs tree **SHOULD** reinforce page type when practical. Physical placement **MUST NOT** override the page-type contract. Why: Folder layout is migrating incrementally.
 
 ## Scope and Audience
 
@@ -23,17 +23,17 @@ All contributors and agents writing or updating public docs under `docs/Docusaur
 
 ## At-a-Glance Quick-Start
 
-- Choose the page type first.
-- State the page outcome or scope in the opening.
-- Keep one page for one reader intent.
-- Split and cross-link when the topic spans multiple intents.
+- Choose the page type before writing.
+- State the outcome or scope in the opening.
+- Keep each page focused on one reader intent.
+- Split and cross-link topics that span multiple intents.
 
 ## Classification Questions
 
-Ask these questions before writing:
+Ask these questions before writing.
 
-- Is the reader trying to get to a first success?
-- Is the reader trying to learn by following a guided sequence?
+- Is the reader trying to reach a first success?
+- Is the reader trying to learn through a guided sequence?
 - Is the reader trying to complete a specific task quickly?
 - Is the reader trying to understand a model, guarantee, or trade-off?
 - Is the reader trying to look up exact facts?
@@ -53,5 +53,3 @@ Ask these questions before writing:
 - Public guide: `docs/Docusaurus/docs/contributing/documentation-guide.md`
 - Documentation authoring: `.github/instructions/documentation-authoring.instructions.md`
 - Feature documentation structure: `.github/instructions/feature-documentation-structure.instructions.md`
-
-
