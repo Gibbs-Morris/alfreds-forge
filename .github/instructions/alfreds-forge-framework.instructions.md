@@ -4,23 +4,23 @@ applyTo: 'src/**'
 
 # Alfred's Forge Framework Usage
 
-Governing thought: Build applications using the Alfred's Forge framework with source generation as the default, a clean four-project solution structure, Redux-style state management via Reservoir, and small componentized projections over brooks.
+Governing thought: Build applications with Alfred's Forge, source generation by default, four projects, Redux-style Reservoir state, and small componentized projections over brooks.
 
-> Drift check: Review the framework source under `src/` and existing Domain implementations for domain patterns before implementing new features; established patterns are authoritative.
+> Drift check: Review `src/` and existing Domain implementations before adding features. Established patterns are authoritative.
 
 ## Rules (RFC 2119)
 
 ### Instruction Maintenance
 
-- When repository applications are updated with new patterns (e.g., effects, new attributes, new source generation options), this instruction file **MUST** be updated in the same PR or immediately following PR. Why: Reference guidance must remain in sync.
-- New framework capabilities added to `src/` that affect how applications are built **MUST** be documented in this file before broad adoption. Why: Ensures contributors understand new patterns before applying them.
+- When repository applications gain patterns such as effects, attributes, or source-generation options, this file **MUST** be updated in the same PR or immediately after it. Why: Keeps reference guidance synchronized.
+- New capabilities in `src/` that affect application design **MUST** be documented here before broad adoption. Why: Contributors need the new patterns before they use them.
 
 ### Source Generation
 
-- Source generation **SHOULD** be used for all supported concerns (DTOs, actions, action effects, endpoints, mappers) when a generator exists; manual implementations **MAY** be used only when no generator supports the scenario. Why: Reduces boilerplate and ensures consistency while preserving escape hatches.
-- Generators consume Domain project types (aggregates, commands, events, projections) and emit Client artifacts (actions, action effects, feature registrations, DTOs); see the Generator Inputs table below and Inlet and Client-Server Integration. Why: Centralizes the source of truth in Domain while producing artifacts for all targets.
-- Types marked with `[PendingSourceGenerator]` (defined in `src/Inlet.Generators.Abstractions/`) **MUST** be treated as reference implementations for generator validation only; they exist to enable test comparisons between generated and expected code and **MUST NOT** be used as patterns for new development. Why: Scoped to generator testing infrastructure.
-- Contributors **SHOULD** review `src/Inlet.Client.Generators/` and `src/Inlet.Gateway.Generators/` for generator implementations, `src/Inlet.Generators.Abstractions/` for attribute definitions, and `src/Reservoir/` for state management. Why: Understanding the framework internals aids correct usage; abstractions define the attribute surface while generator projects contain the logic.
+- Contributors **SHOULD** use generators for every supported concern: DTOs, actions, action effects, endpoints, and mappers. Manual implementations **MAY** be used only when no generator supports the scenario. Why: Generators reduce boilerplate and keep code consistent while preserving an escape hatch.
+- Generators consume Domain types—aggregates, commands, events, and projections—and emit Client artifacts—actions, action effects, feature registrations, and DTOs. See the Generator Inputs table and Inlet and Client-Server Integration. Why: Domain types remain the source of truth and generated artifacts serve every target.
+- Types marked `[PendingSourceGenerator]` in `src/Inlet.Generators.Abstractions/` **MUST** be used only as reference implementations for generator validation. They support test comparisons between generated and expected code and **MUST NOT** guide new development. Why: They belong to generator test infrastructure.
+- Contributors **SHOULD** review `src/Inlet.Client.Generators/`, `src/Inlet.Gateway.Generators/`, `src/Inlet.Generators.Abstractions/`, and `src/Reservoir/`. The first two contain generator implementations, the third contains attribute definitions, and the last contains state management. Why: Framework internals explain correct usage; abstractions define the attribute surface.
 
 #### Generator Inputs by Project
 
@@ -33,149 +33,150 @@ Governing thought: Build applications using the Alfred's Forge framework with so
 
 ### Solution Structure
 
-- New repository applications in this repository **MUST** follow the four-project structure: Runtime host (running in an Orleans silo), ASP.NET Gateway, Blazor WebAssembly Client, and Domain (see Scope and Audience). Why: Separates concerns and enables source generation.
-- An Aspire AppHost project **SHOULD** be included for local development orchestration. Why: Simplifies emulator setup for Cosmos, Azure Storage, and Orleans.
-- Runtime and Gateway host projects **MUST** contain only configuration, options, dependency wiring, and framework registration—not domain logic. Why: Keeps host projects thin.
-- The Domain project **MUST** contain all server-side domain state (aggregates, projections, commands, events, handlers, reducers). Why: Centralizes domain logic for source generation.
-- The WebAssembly Client project **MUST** contain all front-end code including UX, UI, and local state management. Why: Separates client concerns from server domain.
+- New repository applications **MUST** use four projects: Runtime host in an Orleans silo, ASP.NET Gateway, Blazor WebAssembly Client, and Domain. See Scope and Audience. Why: Separates concerns and enables source generation.
+- An Aspire AppHost project **SHOULD** provide local development orchestration. Why: Simplifies Cosmos, Azure Storage, and Orleans emulator setup.
+- Runtime and Gateway host projects **MUST** contain only configuration, options, dependency wiring, and framework registration. They **MUST NOT** contain domain logic. Why: Keeps hosts thin.
+- The Domain project **MUST** contain all server-side domain state: aggregates, projections, commands, events, handlers, and reducers. Why: Centralizes domain logic for source generation.
+- The WebAssembly Client project **MUST** contain all front-end code, including UX, UI, and local state management. Why: Separates client concerns from server domain.
 
 ### State Management (Reservoir)
 
-- All client-side domain and business state **MUST** be managed via the Reservoir store using actions and reducers; ephemeral UI state (e.g., hover, focus, temporary form input) **MAY** remain component-local. Why: Enforces predictable Redux/Flux-style state management for state that matters while allowing practical UI patterns. See `.github/instructions/blazor-ux-guidelines.instructions.md`.
-- Contributors **SHOULD** review how Reservoir is implemented in `src/Reservoir/` before building features. Why: Understanding the store pattern ensures correct usage.
-- Dispatching actions and obtaining feature state **MUST** go through the store; ad-hoc or component-local state management **MUST NOT** be used for domain state. Why: Prevents scattered state that cannot be inspected or replayed.
-- Third-party component libraries **MUST** integrate with Reservoir's state model; libraries that insist on managing internal state incompatibly **SHOULD NOT** be used as general-purpose UI components. Why: Maintains state consistency.
-- Manual actions **SHOULD** follow the `{Command}Action`, `{Command}ExecutingAction`, `{Command}SucceededAction`, `{Command}FailedAction` naming pattern; generated actions follow generator naming conventions (see Inlet and Client-Server Integration). Why: Provides clear lifecycle visibility while respecting generator output.
+- Client-side domain and business state **MUST** use the Reservoir store with actions and reducers. Ephemeral UI state, such as hover, focus, and temporary form input, **MAY** remain in a component. See `.github/instructions/blazor-ux-guidelines.instructions.md`. Why: Provides predictable Redux/Flux state while allowing practical UI patterns.
+- Contributors **SHOULD** review `src/Reservoir/` before building features. Why: The implementation explains the store pattern.
+- Dispatching actions and obtaining feature state **MUST** go through the store. Ad hoc or component-local state management **MUST NOT** be used for domain state. Why: Keeps important state inspectable and replayable.
+- Third-party component libraries **MUST** fit Reservoir's state model. Libraries that require incompatible internal state **SHOULD NOT** serve as general-purpose UI components. Why: Preserves state consistency.
+- Manual actions **SHOULD** use `{Command}Action`, `{Command}ExecutingAction`, `{Command}SucceededAction`, and `{Command}FailedAction`. Generated actions use generator naming conventions. See Inlet and Client-Server Integration. Why: Makes the action lifecycle visible while respecting generated names.
 
 ### UX Component Guidelines
 
-- Components **MUST** follow atomic design principles (Atoms, Molecules, Organisms, Templates, Pages). Why: Enables composition and reuse.
-- State flows down the component tree via parameters (including cascading parameters for shared context); domain events flow up via `EventCallback`. Why: Creates predictable unidirectional data flow for domain interactions. See `.github/instructions/blazor-ux-guidelines.instructions.md`.
-- Presentational components (Atoms, Molecules) **MUST NOT** call APIs or dispatch actions directly; they **MUST** emit events that container components (Organisms, Pages) handle. Container components dispatch actions to the store; action effects respond to those dispatched actions (see Action Effects and Reservoir State Management). Why: Keeps presentational components pure and testable while allowing containers to coordinate.
-- See `.github/instructions/blazor-ux-guidelines.instructions.md` for detailed component patterns. Why: UX guidelines contain comprehensive rules.
+- Components **MUST** follow atomic design: Atoms, Molecules, Organisms, Templates, and Pages. Why: Enables composition and reuse.
+- State flows down the component tree through parameters, including cascading parameters for shared context. Domain events flow up through `EventCallback`. See `.github/instructions/blazor-ux-guidelines.instructions.md`. Why: Creates predictable unidirectional flow.
+- Presentational components (Atoms and Molecules) **MUST NOT** call APIs or dispatch actions. They **MUST** emit events for container components (Organisms and Pages) to handle. Containers dispatch store actions; action effects respond to them. See Action Effects and Reservoir State Management. Why: Keeps presentational components pure and testable while containers coordinate.
+- See `.github/instructions/blazor-ux-guidelines.instructions.md` for detailed component patterns. Why: It contains the complete UX guidance.
 
 ### Inlet and Client-Server Integration
 
-- Inlet spans both the domain logic and the front end, providing source generation for both sides. Why: Unified framework for client-server communication.
-- Inlet **MUST** be used to generate client-side actions from aggregate commands marked with `[GenerateCommand]`. Why: Automates the HTTP request pipeline.
-- Generated actions map directly to commands defined on aggregates; the mapping is handled by the framework. Why: Reduces manual wiring.
-- When a generated action is dispatched, the source-generated infrastructure handles the following flow:
+- Inlet spans domain logic and the front end and generates code for both sides. Why: It unifies client-server communication.
+- Inlet **MUST** generate client actions from aggregate commands marked `[GenerateCommand]`. Why: Automates the HTTP pipeline.
+- Generated actions map directly to aggregate commands; the framework performs the mapping. Why: Removes manual wiring.
+- When a generated action is dispatched, generated infrastructure follows this flow:
 
   **Success path:**
-  1. Construct and issue an HTTP request
-  2. Handle the request on the server
-  3. Activate or retrieve the aggregate grain instance within the silo (see Orleans Grain Considerations)
-  4. Validate the command and produce events
-  5. Framework appends events to the brook and updates the snapshot (if snapshot storage is configured)
-  6. Projection grains consume events and update their state
-  7. SignalR notifies subscribed clients only, asynchronously (near-real-time, not instant; see Projection Subscriptions)
 
-  **Failure path:** Command validation failures return an error code; no events are produced and projections are unchanged.
+  1. Construct and issue an HTTP request.
+  2. Handle the request on the server.
+  3. Activate or retrieve the aggregate grain in the silo. See Orleans Grain Considerations.
+  4. Validate the command and produce events.
+  5. Append events to the brook and update the snapshot when snapshot storage is configured.
+  6. Let projection grains consume events and update their state.
+  7. Notify only subscribed clients through SignalR asynchronously and near-real-time, not instantly. See Projection Subscriptions.
 
-  See Consistency Model Separation for the async/eventual nature of projection updates.
-- Client features **MUST** be registered via generated `Add{Aggregate}Feature()` extension methods; runtime and gateway projects use `Add{Aggregate}()` (following `.github/instructions/service-registration.instructions.md` conventions). Why: Enables clean, scalable feature registration consistent with repo patterns while distinguishing client from host registrations.
+  **Failure path:** Command validation failures return an error code. They produce no events, and projections stay unchanged.
+
+- Projection updates are asynchronous and eventual. See Consistency Model Separation.
+- Client features **MUST** use generated `Add{Aggregate}Feature()` extension methods. Runtime and Gateway projects use `Add{Aggregate}()`, following `.github/instructions/service-registration.instructions.md`. Why: Distinguishes client and host registration while keeping feature registration scalable.
 
 ### Projection Subscriptions
 
-- UX screens **SHOULD** subscribe to many small projections rather than one large monolithic projection. Why: Minimizes unnecessary updates when data changes.
-- Projections **MUST** be subscribed and unsubscribed using the Inlet subscription APIs. Why: Manages SignalR connections consistently.
-- Design projections so each UI surface subscribes only to what it needs, minimizing updates; a single event may legitimately update multiple projections. Why: Improves performance and reduces re-renders while allowing the 1-to-many brook-to-projection pattern.
-- Client-side projection DTOs **MUST** use `[ProjectionPath]` matching the server projection's path. Why: Enables Inlet to route subscription requests correctly.
+- UX screens **SHOULD** subscribe to many small projections instead of one monolithic projection. Why: Limits unnecessary updates.
+- Projections **MUST** use Inlet subscription APIs for both subscription and unsubscription. Why: Manages SignalR connections consistently.
+- Each UI surface **SHOULD** subscribe only to the projections it needs. One event **MAY** update multiple projections. Why: Reduces updates and re-renders while supporting the one-to-many brook-to-projection pattern.
+- Client projection DTOs **MUST** use `[ProjectionPath]` that matches the server projection path. Why: Lets Inlet route subscription requests correctly.
 
 ### Domain Modeling (Aggregates)
 
-- Contributors **SHOULD** review existing Domain implementations under `src/` to understand the domain modeling approach in detail. Why: Existing implementations are the reference pattern.
-- Aggregates, commands, and events **MUST** be `internal sealed record` types with `[GenerateSerializer]` and `[Id(n)]` on each property; see `.github/instructions/domain-modeling.instructions.md` and Framework Attributes Reference for Orleans serialization requirements. Why: Ensures correct Orleans serialization and visibility.
-- Aggregates **MUST** define commands, and command handlers **MUST** validate business logic before raising events. Why: Enforces invariants.
-- Aggregates **MUST** use `[BrookName]`, `[SnapshotStorageName]`, `[GenerateSerializer]`, and `[Alias]` attributes. Aggregates exposed via API **MUST** also use `[GenerateAggregateEndpoints]` (see Framework Attributes Reference). Why: Enables event sourcing and stable serialization; endpoint generation is conditional on API exposure.
-- Commands exposed to the UX **MUST** be annotated with `[GenerateCommand(Route = "...")]`. Why: Triggers endpoint and action generation.
-- Command handlers **MUST** return `OperationResult<IReadOnlyList<object>>` containing events on success or an error code on failure. Use `AggregateErrorCodes.InvalidCommand` for command validation failures and `AggregateErrorCodes.InvalidState` for state-based rejections. Why: Enables consistent, typed error handling.
-- Command handlers **MUST** validate the command against current state and return events; the framework handles persistence and snapshotting (see Inlet and Client-Server Integration for the full pipeline). Why: Separates business logic from infrastructure concerns.
-- **Pre-1.0 event evolution**: While the repository is pre-1.0 (see `.github/instructions/backwards-compatibility.instructions.md`), event shapes **MAY** be changed freely; V2 event types and compatibility shims **MUST NOT** be introduced for patterns that only exist on the current branch. Why: Pre-release iteration speed outweighs ceremony; only contracts on `main` define the compatibility baseline.
-- **Post-1.0 event immutability**: Once the repository reaches 1.0+ or events are persisted in a real (non-test) store, events **MUST NOT** be modified once written; property names/types **MUST NOT** change on existing events—events are immutable facts forming an append-only log. Adding properties to existing events **MAY** be done but is not always advisable; a new event type (e.g., `{Event}V2`) **SHOULD** be introduced alongside the original for significant schema changes. Why: Post-release, backwards compatibility supports rolling updates and gradual migration.
+- Contributors **SHOULD** review Domain implementations under `src/`. Why: They are the detailed reference pattern.
+- Aggregates, commands, and events **MUST** be `internal sealed record` types with `[GenerateSerializer]` and `[Id(n)]` on every property. See `.github/instructions/domain-modeling.instructions.md` and Framework Attributes Reference. Why: Ensures Orleans serialization and visibility.
+- Aggregates **MUST** define commands. Command handlers **MUST** validate business logic before raising events. Why: Enforces invariants.
+- Aggregates **MUST** use `[BrookName]`, `[SnapshotStorageName]`, `[GenerateSerializer]`, and `[Alias]`. Aggregates exposed through an API **MUST** also use `[GenerateAggregateEndpoints]`. See Framework Attributes Reference. Why: Enables event sourcing and stable serialization; endpoint generation depends on API exposure.
+- Commands exposed to UX **MUST** use `[GenerateCommand(Route = "...")]`. Why: Starts endpoint and action generation.
+- Command handlers **MUST** return `OperationResult<IReadOnlyList<object>>`. Success returns events; failure returns an error code. Use `AggregateErrorCodes.InvalidCommand` for validation failures and `AggregateErrorCodes.InvalidState` for state-based rejections. Why: Enables consistent typed error handling.
+- Command handlers **MUST** validate commands against current state and return events. The framework handles persistence and snapshotting. See Inlet and Client-Server Integration. Why: Separates business logic from infrastructure.
+- **Pre-1.0 event evolution:** While the repository is pre-1.0, as described in `.github/instructions/backwards-compatibility.instructions.md`, event shapes **MAY** change freely. V2 event types and compatibility shims **MUST NOT** be introduced for patterns that exist only on the current branch. Why: Pre-release speed outweighs ceremony; only contracts on `main` define compatibility.
+- **Post-1.0 event immutability:** Once the repository reaches 1.0+ or events are persisted in a real, non-test store, events **MUST NOT** change after writing. Existing event property names and types **MUST NOT** change. Events are immutable facts in an append-only log. Adding properties **MAY** be possible but is not always advisable; significant schema changes **SHOULD** use a new type such as `{Event}V2` alongside the original. Why: Post-release rolling updates need compatibility and gradual migration.
 
 ### Domain Modeling (Projections)
 
-- Multiple projections **MAY** be defined over the same brook (event stream). Why: Enables different read-optimized views of the same data.
-- Projections **SHOULD** be small and highly componentized. Why: Enables reuse across different UX contexts.
-- Projections **MUST** use `[BrookName]`, `[SnapshotStorageName]`, `[GenerateSerializer]`, and `[Alias]` attributes. Projections exposed to clients **MUST** also use `[ProjectionPath]` and `[GenerateProjectionEndpoints]` (see Projection Subscriptions and Framework Attributes Reference). Why: Core attributes enable event sourcing; client-facing attributes are conditional on exposure.
-- Projection reducers **MUST** inherit from `EventReducerBase<TEvent, TProjection>` and return new instances (using `with` expressions or constructors). Why: Enforces immutability.
+- Multiple projections **MAY** use the same brook (event stream). Why: Supports different read-optimized views.
+- Projections **SHOULD** be small and highly componentized. Why: Supports reuse across UX contexts.
+- Projections **MUST** use `[BrookName]`, `[SnapshotStorageName]`, `[GenerateSerializer]`, and `[Alias]`. Client-facing projections **MUST** also use `[ProjectionPath]` and `[GenerateProjectionEndpoints]`. See Projection Subscriptions and Framework Attributes Reference. Why: Core attributes enable event sourcing; client-facing attributes depend on exposure.
+- Projection reducers **MUST** inherit `EventReducerBase<TEvent, TProjection>` and return new instances with `with` expressions or constructors. Why: Enforces immutability.
 
 ### Brooks (Event Streams)
 
-- Brooks **MUST** be identified via the `[BrookName("APPNAME", "MODULENAME", "NAME")]` attribute. Why: Provides stable string-based stream identity.
-- Developers **MUST NOT** work with brooks directly; the framework aligns aggregates and projections by matching `[BrookName]` values. Why: Simplifies event sourcing configuration.
-- Aggregates and brooks have a 1-to-1 relationship; each aggregate **MUST** have exactly one brook. Why: Orleans grains are single-threaded, so a single aggregate per brook ensures update consistency—the aggregate's internal state is always correct.
-- Brooks and UX projections have a 1-to-many relationship; multiple projections **MAY** subscribe to the same brook. Why: Projections are eventually consistent read models, enabling different optimized views of the same event stream (CQRS pattern).
+- Brooks **MUST** use `[BrookName("APPNAME", "MODULENAME", "NAME")]`. Why: Gives each stream a stable string identity.
+- Developers **MUST NOT** work with brooks directly. The framework aligns aggregates and projections by matching `[BrookName]` values. Why: Simplifies event-sourcing configuration.
+- Aggregates and brooks have a one-to-one relationship. Each aggregate **MUST** have exactly one brook. Orleans grains are single-threaded, so one aggregate per brook preserves update consistency and keeps aggregate state correct. Why: Maintains the aggregate consistency boundary.
+- Brooks and UX projections have a one-to-many relationship. Multiple projections **MAY** subscribe to one brook. Projections are eventually consistent read models for optimized views of one event stream (CQRS). Why: Supports different read models without changing the stream.
 
 ### Orleans Grain Considerations
 
-- Aggregate grains are single-threaded; contributors **MUST** design to avoid bottlenecks from "master" grains that do too much. Why: Prevents throughput issues.
-- When scalability requires it, a family of grains/aggregates sharing the same business identifier but storing different aspects **MAY** be created; each aggregate still has its own brook (the 1:1 invariant applies per aggregate type, not per identifier). Why: Distributes load across grain activations while preserving event stream isolation.
-- Grain operations **SHOULD** be designed to be fast and avoid long-running operations. Why: Prevents grain throughput degradation.
+- Aggregate grains are single-threaded. Contributors **MUST** avoid bottlenecks caused by “master” grains that do too much. Why: Protects throughput.
+- When scalability requires it, contributors **MAY** create a family of grains or aggregates that share a business identifier but store different aspects. Each aggregate still has its own brook; the one-to-one invariant applies per aggregate type, not per identifier. Why: Distributes load across activations while preserving event-stream isolation.
+- Grain operations **SHOULD** be fast and avoid long-running work. Why: Protects grain throughput.
 
 ### Action Effects (Client-Side Side Effects)
 
-- Action effects **MAY** be used to trigger additional client-side behavior in response to actions (e.g., showing notifications, triggering navigation, dispatching follow-up actions). Why: Enables reactive client workflows.
-- Action effects run after reducers complete and can emit multiple actions over time (e.g., async operations returning success/failure). Why: Allows side effects to drive further state changes.
-- Action effects **SHOULD** dispatch follow-up actions or call client-side services rather than performing complex inline logic. Why: Keeps action effects lightweight and predictable.
-- Action effects run on the client; they **MUST NOT** be confused with server-side event effects (which respond to domain events within grains). Why: Clarifies the distinction between client and server effect patterns.
+- Action effects **MAY** trigger client behavior in response to actions, such as notifications, navigation, and follow-up actions. Why: Supports reactive client workflows.
+- Action effects run after reducers complete and can emit multiple actions over time, including asynchronous success and failure actions. Why: Lets side effects drive further state changes.
+- Action effects **SHOULD** dispatch follow-up actions or call client services instead of containing complex inline logic. Why: Keeps effects light and predictable.
+- Action effects run on the client. They **MUST NOT** be confused with server-side event effects, which respond to domain events in grains. Why: Keeps client and server effect patterns distinct.
 
 ### Event Effects (Server-Side Side Effects)
 
-- Event effects **MAY** be used to trigger server-side behavior in response to persisted domain events (e.g., cross-aggregate commands, external notifications, audit logging). Why: Enables reactive server-side workflows without coupling aggregates.
-- Event effects run synchronously within the grain context after events are persisted; they block the grain until complete. Why: Ensures effects finish before the next command is processed.
-- Event effects **MUST** inherit from `EventEffectBase<TEvent, TAggregate>` (if yielding additional events) or `SimpleEventEffectBase<TEvent, TAggregate>` (if performing side operations only). Why: Provides strongly-typed event handling with proper async enumerable support.
-- Event effects **SHOULD** be placed in an `Effects` sub-namespace under the aggregate (e.g., `Aggregates/BankAccount/Effects/`). Why: Source generators discover effects by namespace convention.
-- Event effects can yield additional events via `IAsyncEnumerable<object>`, which are persisted immediately; this enables streaming scenarios (e.g., LLM token streaming, progressive data fetch). Why: Allows effects to produce follow-up events that update projections in real-time.
-- Event effects **SHOULD** complete quickly (sub-second typical); a warning is logged if an effect takes longer than 1 second. Why: Long-running effects block grain throughput.
-- For long-running background work triggered by events, event effects **SHOULD** dispatch commands to other grains or use Orleans reminders/timers rather than performing inline processing. Why: Avoids blocking the originating grain.
-- Event effects **MUST** be stateless and registered as transient services; the framework auto-registers them via `AddEventEffect<TEffect, TAggregate>()`. Why: Ensures effects are instantiated per invocation with correct DI scope.
-- Event effects can inject Orleans services (e.g., `IAggregateGrainFactory`, `IGrainContext`) to dispatch commands to other aggregates. Why: Enables cross-aggregate workflows like the Spring sample's `HighValueTransactionEffect`.
+- Event effects **MAY** trigger server behavior after persisted domain events, including cross-aggregate commands, external notifications, and audit logging. Why: Supports reactive server workflows without coupling aggregates.
+- Event effects run synchronously in the grain context after event persistence and block the grain until completion. Why: Ensures completion before the next command.
+- Event effects **MUST** inherit `EventEffectBase<TEvent, TAggregate>` when they yield more events, or `SimpleEventEffectBase<TEvent, TAggregate>` when they perform side operations only. Why: Provides typed handling and correct async-enumerable support.
+- Event effects **SHOULD** live in an `Effects` sub-namespace under the aggregate, such as `Aggregates/BankAccount/Effects/`. Why: Source generators discover effects by namespace convention.
+- Event effects can yield more events through `IAsyncEnumerable<object>`. The framework persists them immediately. This supports streaming such as LLM token streaming and progressive data fetch. Why: Lets effects produce follow-up events for real-time projection updates.
+- Event effects **SHOULD** finish quickly, typically in under one second. The framework logs a warning when one exceeds one second. Why: Long effects block grain throughput.
+- For long-running background work triggered by events, event effects **SHOULD** dispatch commands to other grains or use Orleans reminders or timers instead of inline processing. Why: Avoids blocking the originating grain.
+- Event effects **MUST** be stateless and registered as transient services. The framework auto-registers them with `AddEventEffect<TEffect, TAggregate>()`. Why: Creates each effect per invocation with the correct DI scope.
+- Event effects can inject Orleans services such as `IAggregateGrainFactory` and `IGrainContext` to dispatch commands to other aggregates. Why: Supports cross-aggregate workflows such as the Spring sample's `HighValueTransactionEffect`.
 
 ### Fire-and-Forget Event Effects
 
-- Fire-and-forget effects **MAY** be used for async side effects that should not block the aggregate grain (e.g., external API calls, notifications, analytics). Why: Enables background processing without impacting command latency.
-- Fire-and-forget effects **MUST** inherit from `FireAndForgetEventEffectBase<TEvent, TAggregate>`. Why: Provides strongly-typed event handling with dedicated worker grain execution.
-- Fire-and-forget effects run in a separate worker grain, not the aggregate grain; they provide Orleans single-threaded guarantees but otherwise are infrastructure. Why: Keeps aggregate grains fast while effects can take longer.
-- Fire-and-forget effects **MUST NOT** yield additional events; if further state changes are needed, the effect **MUST** dispatch commands through the normal aggregate command API. Why: Maintains event stream integrity and aggregate ownership of state transitions.
-- Fire-and-forget effects **SHOULD** be placed in an `Effects` sub-namespace under the aggregate (same as regular event effects). Why: Source generators discover effects by namespace convention.
-- Fire-and-forget effects are registered automatically via `AddFireAndForgetEventEffect<TEffect, TEvent, TAggregate>()` when using source generators. Why: Follows the same discovery pattern as regular event effects.
-- Use fire-and-forget effects when the effect may take significant time (external HTTP calls, third-party integrations) and blocking the aggregate is unacceptable. Why: p99 latency improves when slow side effects are offloaded.
+- Fire-and-forget effects **MAY** run asynchronous side effects without blocking the aggregate grain, including external API calls, notifications, and analytics. Why: Offloads background work without increasing command latency.
+- Fire-and-forget effects **MUST** inherit `FireAndForgetEventEffectBase<TEvent, TAggregate>`. Why: Provides typed handling through a dedicated worker grain.
+- Fire-and-forget effects run in a separate worker grain, not the aggregate grain. They provide Orleans single-threaded guarantees but are otherwise infrastructure. Why: Keeps aggregate grains fast while effects take longer.
+- Fire-and-forget effects **MUST NOT** yield more events. If state must change, the effect **MUST** dispatch commands through the normal aggregate command API. Why: Preserves event-stream integrity and aggregate ownership of state transitions.
+- Fire-and-forget effects **SHOULD** live in an `Effects` sub-namespace under the aggregate, as regular event effects do. Why: Source generators discover effects by namespace convention.
+- Source generators register fire-and-forget effects with `AddFireAndForgetEventEffect<TEffect, TEvent, TAggregate>()`. Why: Reuses the discovery pattern for regular event effects.
+- Use fire-and-forget effects when significant work, such as external HTTP calls or third-party integrations, makes aggregate blocking unacceptable. Why: Offloading slow side effects improves p99 latency.
 
 ### Storage Providers
 
-- Cosmos DB **SHOULD** be used as the default storage provider for brooks (events) and snapshots; it lends itself well to event sourcing's append-only writes and Aspire integration. Why: Provides scalable, globally distributed storage with excellent developer experience.
-- Custom storage providers **MAY** be implemented when Cosmos is not suitable; the framework's storage abstractions allow pluggable backends. Why: Preserves flexibility for different deployment scenarios.
-- New projects **SHOULD** use Aspire to set up local development with emulators. Why: Enables consistent local development experience.
-- The Spring sample demonstrates this setup using Cosmos for event sourcing and Azure Storage for Orleans clustering/grain state. Why: Provides reference implementation for storage configuration.
-- Storage client registrations **MUST** use keyed services following the patterns in `Spring.Runtime/Program.cs`. Why: Enables multiple storage accounts for different purposes.
+- Cosmos DB **SHOULD** be the default provider for brooks (events) and snapshots. It suits append-only event-sourcing writes and Aspire integration. Why: It provides scalable, globally distributed storage and a strong developer experience.
+- Custom providers **MAY** be used when Cosmos is unsuitable. Framework storage abstractions support pluggable backends. Why: Supports different deployment scenarios.
+- New projects **SHOULD** use Aspire with emulators for local development. Why: Provides a consistent local experience.
+- The Spring sample uses Cosmos for event sourcing and Azure Storage for Orleans clustering and grain state. Why: It demonstrates the reference storage setup.
+- Storage client registrations **MUST** use keyed services and follow `Spring.Runtime/Program.cs`. Why: Supports multiple storage accounts for different purposes.
 
 ### Framework Attributes Reference
 
-Contributors **SHOULD** review all custom attributes under `src/` (particularly in `Inlet.Generators.Abstractions/` and `Brooks.Abstractions/Attributes/`) to understand their behavior.
+Contributors **SHOULD** review all custom attributes under `src/`, especially `Inlet.Generators.Abstractions/` and `Brooks.Abstractions/Attributes/`, to understand their behavior.
 
 | Attribute | Purpose | When to Use | Relates To |
 |-----------|---------|-------------|------------|
-| `[BrookName]` | Identifies the event stream via hierarchical name `(APP, MODULE, NAME)` | Required on all aggregates and projections that share an event stream | Event stream alignment; projections and aggregates with matching brook names share events; names are immutable once deployed—use uppercase alphanumeric segments (see `.github/instructions/storage-type-naming.instructions.md`) |
-| `[SnapshotStorageName]` | Stable snapshot storage identity with versioning `(APP, MODULE, NAME, version)` | Required on aggregates and projections to persist state | Snapshot naming and storage; version enables schema evolution; names are immutable once deployed |
-| `[EventStorageName]` | Stable event storage identity with versioning `(APP, MODULE, NAME, version)` | Required on all event types | Event versioning; enables safe refactoring without breaking stored events; names are immutable once deployed |
-| `[GenerateAggregateEndpoints]` | Generates runtime registration, gateway controller, and client feature code | Required on aggregate records exposed via API | Endpoint generation; creates `Add{Aggregate}()` extension methods |
-| `[GenerateProjectionEndpoints]` | Generates read-only GET endpoint and SignalR subscription code | Required on projections exposed to clients | Endpoint generation; creates projection controller and client subscription |
-| `[GenerateCommand]` | Exposes command as HTTP POST endpoint with generated client action | Required on commands that should be callable from UX | Command exposure; `Route` property controls endpoint path |
-| `[ProjectionPath]` | Defines subscription and API path for projections | Required on server projections and matching client DTOs | Subscription routing; path must match between server and client |
-| `[GenerateSerializer]` | Orleans serialization support | Required on all types that cross grain boundaries | Orleans serialization; requires pairing with `[Id(n)]` on properties—IDs start at 0 and must be unique per inheritance level |
-| `[Alias]` | Stable Orleans type identity that survives refactoring | Required on all serialized types | Type versioning; use fully qualified name format |
+| `[BrookName]` | Identifies the event stream through hierarchical `(APP, MODULE, NAME)` | Required on all aggregates and projections that share an event stream | Event-stream alignment; matching names share events; names are immutable after deployment; use uppercase alphanumeric segments. See `.github/instructions/storage-type-naming.instructions.md`. |
+| `[SnapshotStorageName]` | Gives snapshot storage a stable, versioned identity `(APP, MODULE, NAME, version)` | Required on aggregates and projections that persist state | Snapshot naming and storage; versioning enables schema evolution; names are immutable after deployment |
+| `[EventStorageName]` | Gives event storage a stable, versioned identity `(APP, MODULE, NAME, version)` | Required on every event type | Event versioning; safe refactoring without breaking stored events; names are immutable after deployment |
+| `[GenerateAggregateEndpoints]` | Generates runtime registration, Gateway controller, and Client feature code | Required on aggregate records exposed through an API | Endpoint generation; creates `Add{Aggregate}()` extension methods |
+| `[GenerateProjectionEndpoints]` | Generates a read-only GET endpoint and SignalR subscription code | Required on projections exposed to clients | Endpoint generation; creates a projection controller and client subscription |
+| `[GenerateCommand]` | Exposes a command through an HTTP POST endpoint and generated client action | Required on commands callable from UX | Command exposure; `Route` controls the endpoint path |
+| `[ProjectionPath]` | Defines a projection subscription and API path | Required on server projections and matching client DTOs | Subscription routing; server and client paths must match |
+| `[GenerateSerializer]` | Provides Orleans serialization support | Required on types crossing grain boundaries | Orleans serialization; pair with `[Id(n)]` on properties; IDs start at 0 and are unique at each inheritance level |
+| `[Alias]` | Provides stable Orleans type identity across refactoring | Required on all serialized types | Type versioning; use the fully qualified name format |
 
 ## Scope and Audience
 
-Applies to all contributors building repository applications or new features using the Alfred's Forge framework. These rules ensure applications remain consistent, idiomatic, and serve as reference implementations for framework consumers.
+These rules apply to all contributors who build repository applications or new Alfred's Forge features. They keep applications consistent and idiomatic and make them reference implementations for framework consumers.
 
 ## At-a-Glance Quick-Start
 
 ### Project Structure
 
-Contributors write domain logic (aggregates, commands, events, projections) **in the Domain project** and UI components, custom actions, and action effects **in the Client project**. Source generators produce client artifacts (actions, DTOs, feature registrations) from Domain types; runtime registrations and gateway endpoints are also generated.
+Contributors write domain logic—aggregates, commands, events, and projections—in Domain. They write UI components, custom actions, and action effects in Client. Source generators produce Client actions, DTOs, feature registrations, runtime registrations, and Gateway endpoints from Domain types.
 
 ```text
 {Sample}/
@@ -203,115 +204,115 @@ Contributors write domain logic (aggregates, commands, events, projections) **in
 
 ### Typical Workflow
 
-Contributors only write code in the **Domain project**; client-side actions, effects, DTOs, and registrations are **generated automatically**.
+Contributors write code only in Domain. Client actions, effects, DTOs, and registrations are generated automatically.
 
-1. Define aggregate with `[BrookName]`, `[SnapshotStorageName]`, and `[GenerateAggregateEndpoints]` (if exposed via API)
-2. Create commands with `[GenerateCommand(Route = "…")]`
-3. Create events with `[EventStorageName]`
-4. Implement command handlers extending `CommandHandlerBase`
-5. Implement aggregate reducers extending `EventReducerBase`
-6. Define projections with `[ProjectionPath]` and `[GenerateProjectionEndpoints]` (if exposed to clients)
-7. Implement projection reducers
-8. **Build** — source generators create runtime registrations, gateway controllers, and client features
-9. Client subscribes via Inlet; dispatches generated actions to trigger commands
+1. Define an aggregate with `[BrookName]`, `[SnapshotStorageName]`, and `[GenerateAggregateEndpoints]` when the API exposes it.
+2. Create commands with `[GenerateCommand(Route = "…")]`.
+3. Create events with `[EventStorageName]`.
+4. Implement command handlers that extend `CommandHandlerBase`.
+5. Implement aggregate reducers that extend `EventReducerBase`.
+6. Define projections with `[ProjectionPath]` and `[GenerateProjectionEndpoints]` when clients expose them.
+7. Implement projection reducers.
+8. **Build** so source generators create runtime registrations, Gateway controllers, and Client features.
+9. Have Client subscribe through Inlet and dispatch generated actions to trigger commands.
 
 ## Core Principles
 
-- **Source generation first**: Rely on generators for boilerplate; manual code for advanced cases only.
-- **Thin hosts, rich domain**: Runtime/Gateway contain config; Domain contains behavior.
-- **Redux-style state**: All client state flows through Reservoir with actions/reducers.
-- **Small projections**: Many focused projections over one monolithic view.
-- **Event immutability**: Events are facts; never modify, only version.
-- **Orleans awareness**: Design grains for scalability; avoid single-point bottlenecks.
+- **Source generation first:** Use generators for boilerplate; use manual code only for advanced cases.
+- **Thin hosts, rich domain:** Runtime and Gateway contain configuration; Domain contains behavior.
+- **Redux-style state:** Client state flows through Reservoir with actions and reducers.
+- **Small projections:** Prefer many focused projections to one monolithic view.
+- **Event immutability:** Events are facts; never modify them, only version them.
+- **Orleans awareness:** Design grains for scalability and avoid single-point bottlenecks.
 
 ## Holistic Design Benefits
 
-The Alfred's Forge framework's patterns work together to provide compounding benefits. Contributors should leverage these strengths when designing features:
+Alfred's Forge patterns work together. Contributors should use these strengths when designing features.
 
 ### Consistency Model Separation
 
-The 1-to-1 aggregate-to-brook relationship combined with Orleans' single-threaded grain model guarantees **strong consistency within a single aggregate activation**—commands are processed serially and state transitions are atomic. Cross-aggregate consistency requires saga patterns or eventual consistency (see Brooks and Orleans Grain Considerations). Simultaneously, the 1-to-many brook-to-projection relationship provides **eventual consistency** for reads, enabling multiple optimized views without blocking write operations. This separation means contributors can reason about correctness (aggregates) and performance (projections) independently.
+The one-to-one aggregate-to-brook relationship and Orleans' single-threaded grain model provide strong consistency within one aggregate activation: commands run serially and state transitions are atomic. Cross-aggregate consistency needs saga patterns or eventual consistency. See Brooks and Orleans Grain Considerations. The one-to-many brook-to-projection relationship provides eventual consistency for reads and permits optimized views without blocking writes. Contributors can reason about aggregate correctness and projection performance separately.
 
 ### End-to-End Traceability
 
-From UI action dispatch through HTTP, Orleans grain, event persistence, projection update, and SignalR push-back to the client, every step is generated from domain definitions. This means:
+The framework generates every step from UI dispatch through HTTP, Orleans grain processing, event persistence, projection updates, and SignalR push-back:
 
-- Debugging follows a predictable path
-- Breaking changes surface at compile time via source generators
-- The entire flow is testable at each layer
+- Debugging follows a predictable path.
+- Source generators expose breaking changes at compile time.
+- Every layer is testable.
 
 ### Scalability by Design
 
-Orleans grains distribute load automatically. By designing aggregates around natural business identity (e.g., per account, per order), the framework inherently scales horizontally. Contributors don't need to implement sharding or load balancing—it emerges from correct aggregate boundaries.
+Orleans distributes grain load. Aggregates built around natural business identity, such as an account or order, scale horizontally through correct aggregate boundaries. Contributors do not implement sharding or load balancing.
 
 ### Time-Travel and Auditability
 
-Event sourcing means the brook contains the complete history. Combined with immutable events and versioned storage names, this enables:
+Event sourcing gives the brook a complete history. Immutable events and versioned storage names support:
 
-- Replaying events to debug issues
-- Auditing every state change
-- Building new projections over historical data
-- Rolling back by replaying to a point in time
+- Replaying events to debug issues.
+- Auditing every state change.
+- Building projections over historical data.
+- Rolling back by replaying to a point in time.
 
-**Caveat:** Time-travel depends on event retention policies and serializer compatibility across versions. Contributors should plan retention windows and test event schema evolution.
+**Caveat:** Time travel depends on event retention policies and serializer compatibility across versions. Contributors should plan retention windows and test event schema evolution.
 
 ### Developer Velocity
 
-Source generation eliminates hand-written DTOs, mappers, controllers, SignalR hubs, and client actions. Contributors focus on:
+Source generation removes hand-written DTOs, mappers, controllers, SignalR hubs, and client actions. Contributors focus on:
 
-1. Domain modeling (aggregates, commands, events)
-2. Business logic (command handlers, reducers)
-3. UX (components consuming projections)
+1. Domain modeling: aggregates, commands, and events.
+2. Business logic: command handlers and reducers.
+3. UX: components consuming projections.
 
-Everything in between is generated, reducing surface area for bugs and keeping the codebase DRY.
+Everything between these areas is generated. This reduces bug surface area and keeps the codebase DRY.
 
 ### Testability at Every Layer
 
-The clean separation enables:
+The separation enables:
 
-- **L0 tests**: Pure unit tests for reducers, handlers, and domain logic (no infrastructure)
-- **L1 tests**: Light infrastructure tests with in-memory stores
-- **L2 tests**: Integration tests via Aspire with real emulators
-- **Mutation testing**: High-confidence assertions on business logic
+- **L0 tests:** Pure unit tests for reducers, handlers, and domain logic, with no infrastructure.
+- **L1 tests:** Light infrastructure tests with in-memory stores.
+- **L2 tests:** Integration tests through Aspire with real emulators.
+- **Mutation testing:** High-confidence assertions for business logic.
 
-Contributors should design features to maximize L0 coverage, pushing complexity into pure functions that are easy to test and reason about.
+Contributors should maximize L0 coverage by placing complexity in pure functions that are easy to test and reason about.
 
 ### Zero External Infrastructure
 
-Alfred's Forge uses Orleans for everything—including real-time updates via Aqueduct, the Orleans-backed SignalR backplane. By default, applications require:
+Alfred's Forge uses Orleans for everything, including real-time updates through Aqueduct, the Orleans-backed SignalR backplane. By default, applications require:
 
-- **No Redis** for SignalR scale-out
-- **No Azure SignalR Service** for managed real-time
-- **No external message brokers** for cross-server communication
+- **No Redis** for SignalR scale-out.
+- **No Azure SignalR Service** for managed real-time.
+- **No external message brokers** for cross-server communication.
 
-These are defaults, not hard constraints; production deployments can integrate external services when needed.
+These are defaults, not hard constraints. Production deployments can integrate external services when needed.
 
-Inlet uses Aqueduct automatically; contributors don't configure or manage the backplane. Cross-server message delivery happens via Orleans grains, which means real-time scales horizontally with the Orleans cluster. Adding silo nodes increases both compute capacity and real-time throughput without infrastructure changes.
+Inlet uses Aqueduct automatically; contributors do not configure or manage the backplane. Orleans grains deliver messages across servers, so real-time scales horizontally with the Orleans cluster. Adding silo nodes increases compute capacity and real-time throughput without infrastructure changes.
 
 ### Enterprise-Ready with Keyed Services
 
-The framework uses keyed DI services for storage, enabling enterprise deployment patterns where multiple Cosmos databases, blob accounts, or other services coexist:
+Keyed DI services support multiple Cosmos databases, blob accounts, and other coexisting services:
 
-- Brooks events can write to one Cosmos account
-- Snapshots can persist to another
-- Locking can use a dedicated blob storage account
-- Each service uses only the resources it's configured for via module-owned keyed service defaults
+- Brooks events can write to one Cosmos account.
+- Snapshots can persist to another.
+- Locking can use a dedicated blob account.
+- Each service uses only the resources it's configured for via module-owned keyed service defaults.
 
-This enables wide enterprise solutions where different teams or tenants can have isolated storage while sharing the same application infrastructure. See `.github/instructions/keyed-services.instructions.md` for registration patterns and naming conventions.
+This supports enterprise solutions with isolated storage for teams or tenants that share application infrastructure. See `.github/instructions/keyed-services.instructions.md` for registration patterns and naming conventions.
 
 ### Enterprise Benefits with Startup Speed
 
-Alfred's Forge delivers enterprise-grade capabilities—event sourcing, CQRS, real-time updates, horizontal scaling—while maintaining the development speed of a simple CRUD application:
+Alfred's Forge provides event sourcing, CQRS, real-time updates, and horizontal scaling with the development speed of a simple CRUD application:
 
-- Define a command, event, and reducer → you have event sourcing (after storage providers and DI registrations are configured; see Storage Providers)
-- Add `[GenerateAggregateEndpoints]` → you have an API
-- Subscribe from a component → you have real-time updates
+- Define a command, event, and reducer to get event sourcing after configuring storage providers and DI registrations. See Storage Providers.
+- Add `[GenerateAggregateEndpoints]` to get an API.
+- Subscribe from a component to get real-time updates.
 
-Contributors get all the benefits of event-based architecture (auditability, time-travel, decoupled read/write models, horizontal scaling) without the typical complexity tax. The framework handles the infrastructure; contributors focus on business value.
+Contributors get auditability, time travel, decoupled read/write models, and horizontal scaling without the usual complexity tax. The framework handles infrastructure; contributors focus on business value.
 
 ### Extensibility via Orleans Grains
 
-The framework does not limit you to generated flows. Because aggregates live in a silo, you can add custom Orleans grains (timers, reminders, stream consumers, schedulers, long-running workflows) that orchestrate complex logic and invoke aggregate commands directly (or via HTTP if needed). This keeps the aggregate model authoritative while letting you use full Orleans capabilities for advanced scenarios.
+Generated flows are not the limit. Because aggregates live in a silo, contributors can add custom Orleans grains for timers, reminders, stream consumers, schedulers, and long-running workflows. These grains can orchestrate complex logic and invoke aggregate commands directly, or use HTTP when needed. The aggregate model remains authoritative while contributors use full Orleans capabilities.
 
 **Scenario examples:**
 
@@ -323,27 +324,27 @@ The framework does not limit you to generated flows. Because aggregates live in 
 | **Batch ETL drop** | Batch Process → HTTP → Aggregate | A nightly batch job drops a CSV to blob storage, a processing grain picks it up, and posts commands via the API (`ImportInventoryCommand`) for large-scale rehydration. |
 | **Enterprise cross-system workflow** | HTTP + Grain Orchestration | `ClaimsOrchestratorGrain` accepts external HTTP callbacks from a third-party claims system, applies validation, and triggers multiple aggregate commands (claims, payouts, fraud checks), using Orleans timers for SLA escalation. |
 
-These patterns demonstrate that Alfred's Forge's generated flows are a starting point—not a ceiling. Contributors can extend with full Orleans features while keeping aggregates as the single source of truth for business state.
+These patterns show that generated flows are a starting point, not a ceiling. Contributors can use full Orleans features while keeping aggregates the single source of business state.
 
 ### Opinionated Patterns for AI and Human Developers
 
-The framework is deliberately opinionated, providing a single clear way to implement each concern:
+The framework gives each concern one clear pattern:
 
-- **Commands** go to aggregates via generated endpoints
-- **Aggregates** validate commands and produce events to their brook (1-to-1 relationship)
-- **Brooks** (event streams) are append-only logs that aggregates write to and projections read from
-- **Projections** subscribe to brooks and build read-optimized views (1-to-many: one brook feeds many projections)
-- **State** lives in Reservoir on the client, projections on the server
-- **Side effects** use action effects (client) or event effects (server)
+- **Commands** go to aggregates through generated endpoints.
+- **Aggregates** validate commands and produce events in their brook (one-to-one).
+- **Brooks** are append-only event logs that aggregates write and projections read.
+- **Projections** subscribe to brooks and build optimized read views (one-to-many).
+- **State** lives in Reservoir on the client and in projections on the server.
+- **Side effects** use action effects on the client or event effects on the server.
 
-This opinionated approach means:
+This approach means:
 
-- AI models can follow established patterns to build new features from user requirements without inventing novel solutions
-- Contributors don't need to over-engineer or debate architectural choices—the framework has already made them
-- Code reviews focus on business logic correctness, not structural decisions
-- New team members (human or AI) become productive quickly by following the existing patterns
+- AI models can follow established patterns from user requirements without inventing solutions.
+- Contributors need not over-engineer or debate choices already made by the framework.
+- Code reviews focus on business-logic correctness rather than structure.
+- New human or AI team members become productive quickly by following existing patterns.
 
-The result is a slick, event-based architecture where every feature follows the same predictable flow: command → event → projection → UI update.
+The result is an event-based architecture with a predictable command → event → projection → UI update flow.
 
 ## References
 
