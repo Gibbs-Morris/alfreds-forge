@@ -4,35 +4,54 @@ applyTo: '**/*.cs'
 
 # Storage Type Naming with Attributes
 
-Governing thought: Persisted types carry stable, versioned attribute names (`APP.MODULE.NAME.Vn`) so code can be refactored without breaking stored data.
+Governing thought: Use stable, versioned attribute names
+(`APP.MODULE.NAME.Vn`) for persisted types. This lets you refactor code without
+breaking stored data.
 
-> Drift check: Ensure registries/serialization code you reference is current before changing attributes or registries.
+> Drift check: Check current registries and serialization code before changing
+> attributes or registries.
 
 ## Rules (RFC 2119)
 
-- Persisted types (events/snapshots/commands, etc.) **MUST** have a naming attribute (e.g., `[EventStorageName]`, `[SnapshotStorageName]`) with an explicit `version` parameter. Why: Provides stable, versioned identities.
-- The computed name **MUST** follow `APPNAME.MODULENAME.NAME.Vn`; app/module/name **MUST NOT** change once persisted; schema evolution **MUST** increment `version` instead. Why: Maintains compatibility.
-- Each attribute value **MUST** be globally unique; registries (e.g., `IEventTypeRegistry`) **MUST** resolve names↔types; all persisted types **SHOULD** be registered at startup via scanning. Why: Enables deterministic resolution.
-- Class/record names **MAY** be refactored freely when the attribute stays the same. Why: Decouples code identity from storage identity.
-- When members are removed from types backed by persisted data in a real (non-test) store, developers **SHOULD** keep prior versions/types available for reads. While pre-1.0 with no persisted production data, this **MAY** be skipped. See `.github/instructions/backwards-compatibility.instructions.md`. Why: Supports backward compatibility for deployed stores; does not apply to pre-release iteration.
+- Persisted types, such as events, snapshots, and commands, **MUST** have a
+  naming attribute, such as `[EventStorageName]` or `[SnapshotStorageName]`.
+  The attribute **MUST** set an explicit `version` parameter. Why: Gives each
+  type a stable, versioned identity.
+- The computed name **MUST** use `APPNAME.MODULENAME.NAME.Vn`. The `app`,
+  `module`, and `name` parts **MUST NOT** change once persisted. Schema
+  evolution **MUST** increment `version`. Why: Keeps stored data compatible.
+- Each attribute value **MUST** be globally unique. Registries, such as
+  `IEventTypeRegistry`, **MUST** resolve names to types and types to names. All
+  persisted types **SHOULD** be registered at startup through scanning. Why:
+  Enables deterministic resolution.
+- Developers **MAY** freely refactor class and record names when the attribute
+  stays the same. Why: Separates code identity from storage identity.
+- When developers remove members from types backed by persisted data in a real
+  (non-test) store, they **SHOULD** keep prior versions and types available for
+  reads. Before version 1.0, developers **MAY** skip this when no persisted
+  production data exists. See
+  `.github/instructions/backwards-compatibility.instructions.md`. Why:
+  Supports backward compatibility for deployed stores. This guidance does not
+  apply to pre-release iteration.
 
 ## Scope and Audience
 
-Developers creating or consuming persisted types in event-sourced/storage components.
+These rules apply to developers who create or consume persisted types in
+event-sourced or storage components.
 
 ## At-a-Glance Quick-Start
 
-- Decorate types with `[EventStorageName("ORDER","FULFILLMENT","SHIPPED", version: 1)]` (or appropriate attribute).
-- Keep app/module/name stable; bump `version` for breaking changes.
-- Use registries for name↔type resolution; scan assemblies at startup.
+- Add `[EventStorageName("ORDER","FULFILLMENT","SHIPPED", version: 1)]` (or the
+  appropriate attribute) to persisted types.
+- Keep the app, module, and name parts stable. Increase `version` for breaking changes.
+- Use registries to resolve names to types and types to names. Scan assemblies at
+  startup.
 
 ## Core Principles
 
-- Storage identity is attribute-based; code identity can change.
-- Explicit versioning makes evolution safe and auditable.
+- Attribute values define storage identity. Code names can change.
+- Explicit versions make schema evolution safe and easy to audit.
 
 ## References
 
 - Orleans serialization: `.github/instructions/orleans-serialization.instructions.md`
-
-
