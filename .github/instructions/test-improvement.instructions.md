@@ -4,36 +4,38 @@ applyTo: '**'
 
 # Legacy Test Improvement Loop
 
-Governing thought: Raise coverage on legacy code by adding tests only, keeping production code untouched unless explicitly approved.
+Governing thought: Improve legacy code by adding tests only. Keep production code unchanged unless explicit approval allows a change.
 
-> Drift check: Confirm command flags in repository test scripts before use; script behavior is authoritative.
+> Drift check: Confirm command flags in repository test scripts before use. Treat script behavior as authoritative.
 
 ## Rules (RFC 2119)
 
-- Work **MUST** stay under `tests/` unless explicit approval is given to change production code. Why: Assumes existing behavior is correct until tests prove otherwise.
-- New warnings/errors **MUST** be fixed immediately; test code **MUST NOT** add suppressions or `NoWarn`. Why: Zero-warnings applies to tests.
-- Changed code paths **MUST** aim for high coverage with no regressions. Why: Protects quality while improving legacy areas.
-- After the first clean build, agents **SHOULD** use focused project-level test loops but **MUST** still run a build with `-warnaserror`. Why: Keeps iteration fast without skipping gates.
+- Agents **MUST** keep work under `tests/` unless explicit approval allows changes to production code. Why: Assumes existing behavior is correct until tests prove otherwise.
+- Agents **MUST** fix new warnings and errors immediately. Why: Zero warnings applies to tests.
+- Test code **MUST NOT** add suppressions or `NoWarn`. Why: Zero warnings applies to tests.
+- Changed code paths **MUST** aim for high coverage without regressions. Why: Protects quality while improving legacy areas.
+- After the first clean build, agents **SHOULD** use focused project-level test loops. Why: Keeps iteration fast.
+- After the first clean build, agents **MUST** still run a build with `-warnaserror`. Why: Keeps quality gates intact.
 
 ## Scope and Audience
 
-Agents improving tests on legacy/non-TDD areas.
+Agents who improve tests in legacy or non-TDD areas.
 
 ## At-a-Glance Quick-Start
 
-- Restore tools: `dotnet tool restore`
-- Fast loop: `dotnet test ./tests/<Name>/<Name>.csproj -c Release --no-build`
-- Repository tests: `pwsh ./eng/src/agent-scripts/unit-test-alfreds-forge-solution.ps1`
-- Speed up after first build: keep project-scoped loops; still run `dotnet build ... -warnaserror`
+- Restore tools with `dotnet tool restore`.
+- Use `dotnet test ./tests/<Name>/<Name>.csproj -c Release --no-build` as the fast loop.
+- Run repository tests with `pwsh ./eng/src/agent-scripts/unit-test-alfreds-forge-solution.ps1`.
+- Use project-scoped loops after the first build to speed up iteration.
+- Still run `dotnet build ... -warnaserror`.
 
 ## Core Principles
 
-- Tests-only edits; deterministic, isolated tests.
-- Tight loops with quality gates intact.
-- Use script outputs for deterministic tracking rather than manual drift.
+- Keep tests deterministic and isolated.
+- Keep test loops tight and quality gates intact.
+- Use script output to track results instead of manual drift.
 
 ## References
 
 - Canonical testing guidance: `.github/instructions/testing.instructions.md`
 - Shared guardrails: `.github/instructions/shared-policies.instructions.md`
-
