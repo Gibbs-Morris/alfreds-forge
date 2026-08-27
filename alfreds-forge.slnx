@@ -4,6 +4,7 @@
     <Project Path="src/Workbench.Client/Workbench.Client.csproj" />
     <Project Path="src/Workbench.Gateway/Workbench.Gateway.csproj" />
     <Project Path="src/Workbench.Runtime/Workbench.Runtime.csproj" />
+    <Project Path="src/Workbench.AppHost/Workbench.AppHost.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Workbench.Domain.L0Tests/Workbench.Domain.L0Tests.csproj" />
