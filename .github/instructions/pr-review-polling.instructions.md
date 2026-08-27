@@ -4,24 +4,80 @@ applyTo: '**'
 
 # Post-Push PR Review Polling
 
-Governing thought: After pushing code to a branch with an open PR, agents sleep for human review, then systematically address every new comment one-at-a-time until none remain.
+Governing thought: After pushing code to a branch with an open PR, agents wait
+for human review and handle each new comment separately until none remain.
 
-> Drift check: If GitHub MCP tools are unavailable, fall back to GitHub CLI (`gh`); confirm `gh` is installed with `Get-Command gh` before use.
+> Drift check: If GitHub MCP tools are unavailable, use GitHub CLI (`gh`).
+> Confirm that `gh` is installed with `Get-Command gh` before use.
 
 ## Rules (RFC 2119)
 
-- After pushing code to a branch that already has an open PR, agents **MUST** sleep for 300 seconds (e.g. `Start-Sleep -Seconds 300` in PowerShell) before polling for new review comments. Why: Gives reviewers time to inspect the pushed changes before the agent acts.
-- Local commits that have not been pushed **MUST NOT** start the polling loop. Why: Reviewers cannot comment on changes that are not yet visible on the PR.
-- Agents **MUST** poll for unresolved PR review comments/threads using GitHub MCP tools by default; if MCP tools are unavailable and `gh` is installed, agents **MUST** fall back to GitHub CLI using `gh api` and `gh api graphql` for both polling and thread actions; if neither MCP nor `gh` is available, agents **MUST** stop and report the blocker. Why: MCP is the preferred integration; CLI is a reliable fallback when it can perform the exact workflow.
-- When new unaddressed comments are found, agents **MUST** address them one-at-a-time in this exact order per comment: (1) read and understand the comment, (2) apply the minimal focused fix, (3) commit with a message scoped to that single comment, (4) push the branch, (5) reply to the comment thread with what was changed and the commit SHA, (6) resolve the thread. Why: Isolated commits make review history auditable and prevent batched regressions.
-- Agents **MUST NOT** batch unrelated fixes into a single commit; each comment gets its own commit. Why: Keeps the fix traceable to the review feedback that prompted it.
-- Agents **MUST NOT** resolve a thread before pushing the fix and replying with evidence. Why: Premature resolution hides unfinished work.
-- If a comment is declined (disagree or out-of-scope), agents **MUST** reply with rationale and leave the thread open for the reviewer. Why: Only the reviewer or author should close a declined thread.
-- Review threads where `isOutdated` is `true` **SHOULD** be skipped during the polling loop; agents **SHOULD** record them in the remediation ledger as `SKIPPED (outdated)` and leave them open for human review. Why: GitHub does not permit resolving outdated threads via the normal flow; attempting to do so causes API errors or confusing state.
-- If the exact thread reply or resolution action cannot be completed with MCP or `gh` on the current machine, agents **MUST** stop and report the blocker rather than substituting a top-level PR comment. Why: A top-level comment does not satisfy the required per-thread audit trail.
-- After addressing all found comments, agents **MUST** sleep for another 300 seconds and poll again; this loop **MUST** repeat until either (a) a poll returns zero new unaddressed comments or (b) a configured maximum iteration cap is reached. Why: Reviewers may add follow-up comments after fixes land while still bounding the loop in adversarial scenarios.
-- Agents **SHOULD** log each addressed thread (thread ID, status, commit SHA) in a running remediation ledger in their output. Why: Provides an auditable summary of all review actions taken.
-- Agents **SHOULD** configure that maximum-iteration cap to a reasonable value (e.g., 20 iterations); if the cap condition in the previous rule is reached, agents **MUST** log the remaining unresolved threads in the ledger and stop with a summary for human review. Why: Prevents runaway loops in adversarial or high-volume review scenarios while keeping the stopping condition unambiguous.
+- After pushing code to a branch that already has an open PR, agents **MUST**
+  sleep for 300 seconds before polling for new review comments. For example,
+  use `Start-Sleep -Seconds 300` in PowerShell. Why: Reviewers need time to
+  inspect the pushed changes.
+- Local commits that have not been pushed **MUST NOT** start the polling loop.
+  Why: Reviewers cannot comment on changes that are not visible on the PR.
+- Agents **MUST** poll for unresolved PR review comments and threads with
+  GitHub MCP tools by default. Why: MCP is the preferred integration.
+- If MCP tools are unavailable and `gh` is installed, agents **MUST** fall
+  back to GitHub CLI using `gh api` and `gh api graphql` for polling and thread
+  actions. Why: The CLI provides the required fallback workflow.
+- If neither MCP nor `gh` is available, agents **MUST** stop and report the
+  blocker. Why: Agents cannot complete the required workflow without one of
+  these tools.
+- When agents find new unaddressed comments, they **MUST** handle each comment
+  one at a time. Why: Separate handling limits regression risk.
+- Agents **MUST** follow this exact order for each comment:
+  1. Read and understand the comment.
+  2. Apply the minimal focused fix.
+  3. Commit with a message scoped to that single comment.
+  4. Push the branch.
+  5. Reply to the comment thread with what changed and the commit SHA.
+  6. Resolve the thread.
+  Why: Isolated commits make review history auditable.
+- Agents **MUST NOT** batch unrelated fixes into one commit. Why: Each fix
+  must remain traceable to its review feedback.
+- Agents **MUST** create one commit for each comment. Why: One commit per
+  comment prevents unrelated fixes from being grouped together.
+- Agents **MUST NOT** resolve a thread before pushing the fix and replying with
+  evidence. Why: Premature resolution hides unfinished work.
+- If an agent declines a comment because it disagrees or is out of scope, it
+  **MUST** reply with its rationale. Why: The reviewer needs the author's
+  reasoning.
+- If an agent declines a comment, it **MUST** leave the thread open for the
+  reviewer. Why: Only the reviewer or author should close a declined thread.
+- Agents **SHOULD** skip review threads where `isOutdated` is `true` during the
+  polling loop. Why: GitHub does not permit normal resolution of outdated
+  threads.
+- Agents **SHOULD** record each skipped outdated thread in the remediation
+  ledger as `SKIPPED (outdated)`. Why: The ledger preserves the reason for
+  skipping it.
+- Agents **SHOULD** leave skipped outdated threads open for human review. Why:
+  Attempts to resolve them can cause API errors or confusing state.
+- If the current machine cannot complete the exact thread reply or resolution
+  action with MCP or `gh`, agents **MUST** stop and report the blocker. Why:
+  The required per-thread action is unavailable.
+- In that case, agents **MUST NOT** substitute a top-level PR comment. Why: A
+  top-level comment does not satisfy the required per-thread audit trail.
+- After addressing all found comments, agents **MUST** sleep for another 300
+  seconds and poll again. Why: Reviewers may add follow-up comments after
+  fixes land.
+- Agents **MUST** repeat the loop until either a poll returns zero new
+  unaddressed comments or the configured maximum iteration cap is reached.
+  Why: The cap bounds the workflow in adversarial scenarios.
+- Agents **SHOULD** log each addressed thread in a running remediation ledger
+  in their output. Why: The ledger provides an auditable action record.
+- Agents **SHOULD** include the thread ID, status, and commit SHA in each
+  ledger entry. Why: These fields make each action auditable.
+- Agents **SHOULD** configure a reasonable maximum-iteration cap, such as 20
+  iterations. Why: A cap prevents runaway polling.
+- If the maximum iteration cap is reached, agents **MUST** log the remaining
+  unresolved threads in the ledger. Why: Human reviewers need to see unfinished
+  work.
+- If the maximum iteration cap is reached, agents **MUST** stop with a summary
+  for human review. Why: Human review is required when the bounded loop ends
+  with unresolved threads.
 
 ## Scope and Audience
 
@@ -29,12 +85,13 @@ All agents that push code to branches associated with open pull requests.
 
 ## At-a-Glance Quick-Start
 
-1. Trigger: code pushed to a branch with an open PR.
+1. Start when code is pushed to a branch with an open PR.
 2. Sleep 300 seconds.
-3. Poll for new unresolved review comments (GitHub MCP or `gh` CLI).
-4. For each comment: fix → commit → push → reply → resolve.
-5. Sleep 300 seconds, poll again.
-6. Repeat until zero new comments or the iteration cap is reached.
+3. Poll for new unresolved review comments with GitHub MCP or `gh` CLI.
+4. For each comment, fix, commit, push, reply, and resolve it.
+5. Sleep 300 seconds and poll again.
+6. Repeat until a poll returns zero new comments or the iteration cap is
+   reached.
 
 ## Procedure
 
@@ -70,20 +127,49 @@ Use MCP tools for:
 
 ### GitHub CLI Fallback
 
-If MCP tools are unavailable:
+If MCP tools are unavailable, use these commands:
 
-- `gh pr view <number> --json reviews,comments` — fetch review states (approved/changes-requested) and general PR discussion; does NOT return inline review thread comments
-- `gh api repos/{owner}/{repo}/pulls/{pull_number}/comments` — list review comments on the PR
-- `gh api graphql -f query='query($owner:String!, $repo:String!, $number:Int!) { repository(owner:$owner, name:$repo) { pullRequest(number:$number) { reviewThreads(first:100) { nodes { id isResolved isOutdated comments(first:100) { nodes { databaseId url body path line } } } } } } }' -F owner=<owner> -F repo=<repo> -F number=<pull_number>` — fetch thread IDs and top-level comment IDs
-- `gh api -X POST repos/{owner}/{repo}/pulls/{pull_number}/comments/{comment_id}/replies -f body='<reply>'` — reply to a top-level review comment in the thread
-- `gh api graphql -f query='mutation($threadId:ID!) { resolveReviewThread(input:{threadId:$threadId}) { thread { id isResolved } } }' -F threadId='<thread-node-id>'` — resolve a review thread
-- If any required thread action cannot be completed with `gh`, stop and report the blocker instead of posting a top-level PR comment
+- Fetch review states and general PR discussion:
+
+  ```text
+  gh pr view <number> --json reviews,comments
+  ```
+
+  This command fetches review states (approved/changes-requested) and general
+  PR discussion. It does NOT return inline review thread comments.
+
+- List review comments on the PR:
+
+  ```text
+  gh api repos/{owner}/{repo}/pulls/{pull_number}/comments
+  ```
+
+- Fetch thread IDs and top-level comment IDs:
+
+  ```text
+  gh api graphql -f query='query($owner:String!, $repo:String!, $number:Int!) { repository(owner:$owner, name:$repo) { pullRequest(number:$number) { reviewThreads(first:100) { nodes { id isResolved isOutdated comments(first:100) { nodes { databaseId url body path line } } } } } } }' -F owner=<owner> -F repo=<repo> -F number=<pull_number>
+  ```
+
+- Reply to a top-level review comment in the thread:
+
+  ```text
+  gh api -X POST repos/{owner}/{repo}/pulls/{pull_number}/comments/{comment_id}/replies -f body='<reply>'
+  ```
+
+- Resolve a review thread:
+
+  ```text
+  gh api graphql -f query='mutation($threadId:ID!) { resolveReviewThread(input:{threadId:$threadId}) { thread { id isResolved } } }' -F threadId='<thread-node-id>'
+  ```
+
+- If any required thread action cannot be completed with `gh`, stop and
+  report the blocker instead of posting a top-level PR comment.
 
 ## Core Principles
 
-- Sleep before polling; do not race reviewers.
-- One comment = one commit = one reply = one resolution.
-- Prefer MCP; fall back to CLI. Never skip the feedback loop.
+- Sleep before polling. Do not race reviewers.
+- Use one comment, one commit, one reply, and one resolution.
+- Prefer MCP and fall back to CLI. Never skip the feedback loop.
 - Keep a ledger of actions for traceability.
 
 ## References
@@ -91,6 +177,5 @@ If MCP tools are unavailable:
 - PR review guide: `.github/instructions/pull-request-reviews.instructions.md`
 - PR description authoring: `.github/instructions/pr-description.instructions.md`
 - Shared guardrails: `.github/instructions/shared-policies.instructions.md`
-- Build issue remediation: `.github/instructions/build-issue-remediation.instructions.md`
-
-
+- Build issue remediation:
+  `.github/instructions/build-issue-remediation.instructions.md`
