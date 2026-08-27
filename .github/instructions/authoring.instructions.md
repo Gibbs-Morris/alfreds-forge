@@ -4,38 +4,44 @@ applyTo: '**/*.instructions.md'
 
 # Instruction Authoring Guide
 
-Governing thought: Every instruction file follows the same concise template—front matter, governing thought, a single Rules section, then supporting detail.
+Governing thought: Use one concise structure for every instruction file: front matter, purpose, rules, and only the supporting detail that readers need.
 
-> Drift check: When referencing scripts, open them under `eng/src/agent-scripts/`; scripts remain authoritative.
+> Drift check: Open referenced scripts under `eng/src/agent-scripts/` before quoting commands or behavior. Treat those scripts as canonical.
 
 ## Rules (RFC 2119)
 
-- Each instruction **MUST** include YAML front matter with `applyTo`, an H1 title, a one-sentence governing thought, a Drift check note near the top, and a single consolidated **Rules (RFC 2119)** section. Why: Enables predictable parsing.
-- RFC 2119 keywords **MUST** stay uppercase and **MUST NOT** appear outside the Rules section except in quoted examples. Why: Prevents accidental policy drift.
-- Files **MUST** live in `.github/instructions/` with kebab-case `<topic>.instructions.md`; one cohesive topic per file **SHOULD** be maintained. Why: Improves discoverability.
-- Authoring **MUST** use concise, factual US English; Rules bullets **MUST** contain one requirement per sentence with a brief “Why” when not obvious. Why: Reduces tokens and ambiguity.
-- Command examples **MUST** reference real scripts/tools; secrets **MUST NOT** appear in content or examples. Why: Keeps docs actionable and safe.
-- Changes to instructions **MUST** follow repository review policy and **MUST** be mirrored to Cursor `.mdc` files per sync instructions. Why: Maintains parity across tools.
+- Every instruction file **MUST** include YAML front matter with `applyTo`, an H1 title, a one-sentence governing thought, a Drift check note, and one consolidated `Rules (RFC 2119)` section. Why: Enables predictable parsing.
+- RFC 2119 keywords **MUST** stay uppercase. They **MUST NOT** appear outside the Rules section unless they occur in a quoted example. Why: Prevents accidental policy changes.
+- Instruction files **MUST** live in `.github/instructions/`. Filenames **MUST** use kebab-case with the form `<topic>.instructions.md`. Each file **SHOULD** cover one cohesive topic. Why: Improves discovery.
+- Authors **MUST** use concise, factual US English. Each Rules bullet **MUST** contain one requirement per sentence. Each rule **SHOULD** include a short `Why` when the reason is not obvious. Why: Reduces ambiguity and token use.
+- Command examples **MUST** use real scripts or tools. Content and examples **MUST NOT** contain secrets. Why: Keeps guidance safe and actionable.
+- Instruction changes **MUST** follow repository review policy. Authors **MUST** update a matching Cursor `.mdc` file only when that mirror exists. Why: Preserves parity without requiring unused files.
 
 ## Scope and Audience
 
-Anyone creating or updating `*.instructions.md`.
+Use these rules when you create or update `*.instructions.md`.
 
-## At-a-Glance Quick-Start
+## Quick Start
 
-- Copy the standard section order: front matter → title + governing thought → Drift check → Rules → Scope and Audience → Quick-Start → Core Principles → Procedures/Examples/References (as needed).
-- Keep RFC 2119 keywords only in Rules; keep prose concise.
-- Link to authoritative scripts/configs instead of duplicating details.
+Use this section order:
+
+1. Front matter.
+2. H1 title and governing thought.
+3. Drift check.
+4. Rules.
+5. Scope and Audience.
+6. Quick Start.
+7. Core Principles.
+8. Procedures, Examples, and References when needed.
+
+Keep RFC 2119 keywords in the Rules section. Keep prose concise. Link to authoritative scripts and configs instead of copying their details.
 
 ## Core Principles
 
-- Predictable structure enables humans and automation to consume instructions.
-- Concise, factual wording minimizes tokens and misinterpretation.
-- Canonical sources (scripts/configs) trump narrative text.
+- Use a predictable structure so humans and automation can read instructions.
+- Use concise, factual wording to reduce tokens and misinterpretation.
+- Treat canonical scripts and configs as more authoritative than narrative text.
 
 ## References
 
 - RFC keywords: `.github/instructions/rfc2119.instructions.md`
-- Sync policy: `.github/instructions/instruction-mdc-sync.instructions.md`
-
-
