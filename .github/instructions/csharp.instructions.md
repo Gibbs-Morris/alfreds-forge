@@ -4,56 +4,55 @@ applyTo: '**/*.cs'
 
 # C# Development Standards
 
-Governing thought: Write SOLID, testable, cloud-ready C# with internal-by-default access, options/DI patterns, and Orleans-safe practices.
+Governing thought: Write SOLID, testable, cloud-ready C# with internal-by-default access, options and DI patterns, and Orleans-safe code.
 
-> Drift check: Check `Directory.Build.props`/`Directory.Packages.props` and referenced scripts before editing; they define analyzers, CPM, and defaults.
+> Drift check: Check `Directory.Build.props`, `Directory.Packages.props`, and referenced scripts before editing. They define analyzers, Central Package Management, and defaults.
 
 ## Rules (RFC 2119)
 
-- Code **MUST** follow SOLID and remain unit-testable via clear seams/DI; blocking calls and shared mutable state **MUST NOT** be introduced. Why: Keeps code maintainable and testable.
-- .NET analyzers **MUST** stay enabled; warnings are errors. Suppressions or `#pragma` **MUST NOT** be added without approval. Why: Zero-warnings is mandatory.
-- XML documentation **MUST NOT** include `<example>` or `<code>` blocks with code samples; examples drift over time and become stale/misleading. Readers can refer to real implementation code in the repository instead. Why: Prevents documentation drift and maintenance burden.
-- Injected dependencies **MUST** use the get-only property pattern (`private Type Name { get; }`); field injection/underscored fields **MUST NOT** be used. Why: Aligns with logging and analyzers.
-- Source files **MUST NOT** include copyright/license headers or banners at the top; repository-level licensing already applies. Why: Avoids noisy/stale headers and keeps diffs focused on behavior.
-- Configuration **MUST** use `IOptions<T>`/`IOptionsSnapshot<T>`/`IOptionsMonitor<T>`; constructors **MUST NOT** take raw config primitives. Why: Centralizes config and validation.
-- Nested classes **SHOULD NOT** be used except for truly private implementation details; test helpers and public/internal types **MUST** be top-level or in their own files. Why: Nested classes complicate mocking frameworks (NSubstitute/Castle.DynamicProxy) and reduce discoverability.
-- Access control: types **MUST** default to `internal`; public/protected/unsealed types **MUST** document justification in XML comments; implementation types **MUST** remain internal unless part of public API. Why: Protects API surface.
-- New/refactored APIs **MUST** follow established .NET BCL/runtime conventions (for example, `Try*`/`Parse`, `Async` suffixes, and `CancellationToken` for cancelable async work); when ambiguous, they **MUST** match widely used .NET APIs. Orleans-grain APIs **MUST** align with `.github/instructions/orleans.instructions.md` and common Orleans conventions (for example, `Task`/`Task<T>` returns and no synchronous blocking). Why: Minimizes context switching and improves DX.
-- Grain implementations **MUST** implement `IGrainBase`, be `sealed`, and **MUST NOT** inherit from `Grain`; grain interfaces **MUST** be public only when external callers need them. Why: Follows Orleans 7+ POCO guidance.
-- Orleans code **MUST NOT** use `Parallel.ForEach` or chatty inter-grain calls; prefer async + `Task.WhenAll`. Why: Preserves Orleans threading model.
-- Options and registration classes (`*Registrations`) **MAY** be public when part of consumer surface; otherwise **SHOULD** stay internal. Why: Keeps public surface intentional.
-- Public contracts **SHOULD** live in `.Abstractions` projects; implementations **MUST** stay in main projects. Why: Supports clean layering.
-- Classes **SHOULD** be records/immutable where feasible and only inheritable with clear need; interfaces **SHOULD** be public only when part of deliberate API; members **SHOULD** expose least privilege. Why: Reduces coupling and breaks.
-- New third-party dependencies **MAY** be added only with explicit approval or when extending already-adopted tech. Why: Limits supply-chain risk and sprawl.
-- All logging **SHOULD** use LoggerExtensions per logging rules. Why: Maintains performance and consistency.
-- Code that requires current date/time **MUST** inject `TimeProvider` rather than calling `DateTime.Now`, `DateTime.UtcNow`, or `DateTimeOffset.UtcNow` directly; tests **SHOULD** use `Microsoft.Extensions.TimeProvider.Testing.FakeTimeProvider` for deterministic assertions. Why: Enables deterministic testing and avoids flaky time-dependent tests.
+- C# code **MUST** follow SOLID and provide clear DI or test seams. Code **MUST NOT** add blocking calls or shared mutable state. Why: Keeps code maintainable and testable.
+- .NET analyzers **MUST** remain enabled. Warnings **MUST** be treated as errors. Authors **MUST NOT** add suppressions or `#pragma` without approval. Why: Enforces zero warnings.
+- XML documentation **MUST NOT** contain `<example>` or `<code>` blocks. Refer readers to repository implementations for examples. Why: Prevents stale samples.
+- Injected dependencies **MUST** use get-only properties such as `private Type Name { get; }`. Field injection and underscored fields **MUST NOT** be used. Why: Aligns with logging and analyzer rules.
+- Source files **MUST NOT** start with copyright or license headers. Why: Repository licensing already applies.
+- Configuration **MUST** use `IOptions<T>`, `IOptionsSnapshot<T>`, or `IOptionsMonitor<T>`. Constructors **MUST NOT** receive raw configuration primitives. Why: Centralizes configuration and validation.
+- Nested classes **SHOULD NOT** be used except for private implementation details. Test helpers and public or internal types **MUST** be top-level or use their own files. Why: Nested classes reduce discoverability and can block NSubstitute or Castle.DynamicProxy mocking.
+- Types **MUST** default to `internal`. Public, protected, and unsealed types **MUST** document their justification in XML comments. Implementation types **MUST** remain internal unless they form part of the public API. Why: Protects the API surface.
+- New or changed APIs **MUST** follow established .NET BCL and runtime conventions, including `Try*` and `Parse`, `Async` suffixes, and `CancellationToken` for cancelable async work. Ambiguous APIs **MUST** match widely used .NET APIs. Why: Improves discoverability and reduces context switching.
+- Orleans grain APIs **MUST** follow `.github/instructions/orleans.instructions.md` and common Orleans conventions. They **SHOULD** return `Task` or `Task<T>` and **MUST NOT** block synchronously. Why: Keeps grain APIs async-first.
+- Grain implementations **MUST** implement `IGrainBase` and be `sealed`. They **MUST NOT** inherit from `Grain`. Grain interfaces **MUST** be public only when external callers need them. Why: Follows Orleans 7+ POCO guidance.
+- Orleans code **MUST NOT** use `Parallel.ForEach` or chatty inter-grain calls. Prefer async operations with `Task.WhenAll`. Why: Preserves the Orleans threading model.
+- `*Registrations` options and registration classes **MAY** be public when they form part of the consumer surface. Otherwise they **SHOULD** remain internal. Why: Keeps public APIs intentional.
+- Public contracts **SHOULD** live in `.Abstractions` projects. Implementations **MUST** stay in main projects. Why: Preserves clean layering.
+- Classes **SHOULD** use records or immutable state when feasible. Types **SHOULD** be inheritable only when a clear need exists. Interfaces **SHOULD** be public only as deliberate APIs. Members **SHOULD** expose the least privilege. Why: Reduces coupling and state-related defects.
+- New third-party dependencies **MAY** be added only with explicit approval or to extend technology the repository already adopts. Why: Limits supply-chain risk and dependency sprawl.
+- Logging **SHOULD** use LoggerExtensions as specified by the logging rules. Why: Maintains performance and consistency.
+- Code that needs current time **MUST** inject `TimeProvider`. It **MUST NOT** call `DateTime.Now`, `DateTime.UtcNow`, or `DateTimeOffset.UtcNow` directly. Tests **SHOULD** use `Microsoft.Extensions.TimeProvider.Testing.FakeTimeProvider`. Why: Enables deterministic time tests.
 
 ## Scope and Audience
 
-C# contributors across Alfred's Forge and Samples, including Orleans code.
+Use these rules for C# contributors across Alfred's Forge and Samples, including Orleans code.
 
-## At-a-Glance Quick-Start
+## Quick Start
 
-- Default visibility to `internal`; justify any widening in XML docs.
-- Use DI property pattern and options pattern; no raw config parameters.
-- Inject `TimeProvider` for date/time; use `FakeTimeProvider` in tests.
-- Avoid blocking/parallel loops in Orleans; use async + `Task.WhenAll`.
-- Place public contracts in `.Abstractions`; keep implementations internal.
-- Keep analyzers on; fix warnings instead of suppressing.
+- Default visibility to `internal`. Document any wider visibility in XML.
+- Use DI properties and the options pattern. Do not pass raw configuration values to constructors.
+- Inject `TimeProvider`. Use `FakeTimeProvider` in tests.
+- Avoid blocking calls and parallel loops in Orleans. Use async operations and `Task.WhenAll`.
+- Put public contracts in `.Abstractions`. Keep implementations internal.
+- Keep analyzers enabled. Fix warnings instead of suppressing them.
 
 ## Core Principles
 
-- SOLID + DI seams enable testing and refactoring.
-- Internal-by-default keeps APIs stable and reduces unintended breaking changes (pre-1.0: intentional breaks are permitted per `.github/instructions/backwards-compatibility.instructions.md`).
-- Orleans POCO pattern and async-first avoid threading issues.
-- Immutable/value-object bias improves correctness and logging/serialization.
+- SOLID and DI seams support testing and refactoring.
+- Internal-by-default APIs reduce unintended breaking changes. Before version 1.0, intentional breaks remain allowed by `.github/instructions/backwards-compatibility.instructions.md`.
+- Orleans POCO types and async APIs avoid threading problems.
+- Immutable and value-object designs improve correctness, logging, and serialization.
 
 ## References
 
 - Shared guardrails: `.github/instructions/shared-policies.instructions.md`
-- Naming/docs: `.github/instructions/naming.instructions.md`
+- Naming and docs: `.github/instructions/naming.instructions.md`
 - Orleans specifics: `.github/instructions/orleans.instructions.md`
 - Service registration: `.github/instructions/service-registration.instructions.md`
 - Logging: `.github/instructions/logging-rules.instructions.md`
-
-
