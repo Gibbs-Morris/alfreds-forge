@@ -4,37 +4,35 @@ applyTo: '**'
 
 # Abstractions Projects
 
-Governing thought: Split stable public contracts into `{Vendor}.{Area}[.{Feature}].Abstractions` projects so consumers take lightweight interfaces without implementations.
+Governing thought: Put stable cross-assembly contracts in `{Vendor}.{Area}[.{Feature}].Abstractions` projects so consumers avoid implementation dependencies.
 
-> Drift check: Open any referenced scripts/templates under `eng/src/` before use; scripts remain authoritative.
+> Drift check: Open referenced scripts and templates under `eng/src/` before use. Treat them as canonical.
 
 ## Rules (RFC 2119)
 
-- `*.Abstractions` projects **MUST** contain only public contracts (interfaces, abstract bases with documented justification, DTOs, domain exceptions, CQRS requests); no infrastructure/persistence/hosting code, and DI **MUST NOT** embed concrete dependencies. Generic DI helpers that only register the abstraction to a caller-supplied implementation type and add no new package dependencies **MAY** live in abstractions to keep consumers lightweight. Why: Keeps packages slim while enabling opt-in registration.
-- Main projects **MUST** own all implementations/infrastructure and reference their abstractions; abstractions **MUST NOT** depend on implementations; downstream consumers **SHOULD** reference abstractions unless implementation is required. Why: Preserves clean layering.
-- When all mandatory triggers apply (cross-assembly/service contracts, multiple implementations exist/expected, stable public API), contributors **MUST** create an abstractions project before adding/modifying contracts. Why: Enforces required separation early.
-- When any optional trigger applies (dependency minimization, testing/mocking, cross-team reuse, versioning flexibility), contributors **SHOULD** create an abstractions project unless deliberately documented otherwise. Why: Encourages reuse when valuable.
-- Types that describe *what* to do **SHOULD** live in abstractions; types describing *how* **MUST** stay in main project. Why: Keeps public programming model stable while implementations evolve.
-- Abstract base classes intended for external inheritance **MUST** end with `Base` and document justification; naming **SHOULD** follow `{Vendor}.{Area}[.{Feature}].Abstractions`. Why: Clarifies intent and discoverability.
+- `*.Abstractions` projects **MUST** contain only public contracts: interfaces, justified abstract bases, DTOs, domain exceptions, and CQRS requests. Why: Keeps packages focused.
+- `*.Abstractions` projects **MUST NOT** contain infrastructure, persistence, or hosting code. Why: Keeps consumers independent from implementations.
+- Dependency injection in an abstractions project **MUST NOT** embed concrete dependencies. Why: Keeps registration opt-in.
+- Generic DI helpers **MAY** live in an abstractions project only when they register the abstraction to a caller-supplied implementation type and add no package dependencies. Why: Allows lightweight registration helpers.
+- Main projects **MUST** own implementations and infrastructure. Main projects **MUST** reference their abstractions. Why: Preserves dependency direction.
+- Abstractions **MUST NOT** depend on implementations. Downstream consumers **SHOULD** reference abstractions unless they need an implementation. Why: Preserves clean layering.
+- Contributors **MUST** create an abstractions project before adding or modifying contracts when all of these conditions apply: cross-assembly or service contracts, multiple existing or expected implementations, and a stable public API. Why: Separates stable contracts early.
+- Contributors **SHOULD** create an abstractions project when any of these conditions apply: dependency minimization, testing or mocking, cross-team reuse, or versioning flexibility. Contributors **MAY** omit it when they document the reason. Why: Supports reuse when it has clear value.
+- Types that describe *what* to do **SHOULD** live in abstractions. Types that describe *how* to do it **MUST** stay in the main project. Why: Keeps the public programming model stable.
+- Abstract base classes intended for external inheritance **MUST** end with `Base`. Authors **MUST** document why the base class supports external inheritance. Why: Makes inheritance intent clear.
+- Abstraction project names **SHOULD** follow `{Vendor}.{Area}[.{Feature}].Abstractions`. Why: Makes contracts discoverable.
 
 ## Scope and Audience
 
-Applies whenever creating or updating libraries that expose contracts across assemblies/services.
-
-## At-a-Glance Quick-Start
-
-- If contracts cross assemblies/services and multiple implementations/stable API exist, create `*.Abstractions` first.
-- Keep implementations/DI/storage in main project; reference abstractions from main.
-- Ensure abstractions have minimal dependencies and stay contracts-only.
+Use these rules when you create or update a library that exposes contracts across assemblies or services.
 
 ## Core Principles
 
-- Contracts stay lightweight and reusable.
-- Implementations remain flexible and internal.
-- Dependency direction mirrors `Microsoft.Extensions.*` and Orleans packages.
+- Keep contracts lightweight and reusable.
+- Keep implementations flexible and internal.
+- Follow the dependency direction used by `Microsoft.Extensions.*` and Orleans packages.
 
 ## References
 
 - Naming: `.github/instructions/naming.instructions.md`
-
 
