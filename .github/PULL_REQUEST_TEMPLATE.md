@@ -1,17 +1,17 @@
 # Pull Request Narrative
 
 <!--
-Write for a reviewer who has no context beyond this PR. Keep the completed
-description concise, remove sections that do not apply, and replace every
-placeholder with evidence or an explicit "None" / "Not applicable".
+Write for reviewers who have no context beyond this PR. Keep the completed
+description concise. Remove sections that do not apply. Replace every
+placeholder with evidence or write "None" or "Not applicable".
 -->
 
 ## First Principles: What Changes and What Is the Impact?
 
 <!--
-Start with the underlying problem or opportunity, not the files changed.
-Explain the behavior before and after this PR and the concrete user, business,
-operator, or developer impact.
+Start with the problem or opportunity, not the changed files. Explain the
+behavior before this PR. Explain the behavior after this PR. State the concrete
+impact on users, the business, operators, or developers.
 -->
 
 - **Problem or opportunity:**
@@ -22,8 +22,8 @@ operator, or developer impact.
 ## How to Read This PR and Code
 
 <!--
-Give reviewers a short route through the change. Name the best starting file,
-the suggested reading order, the decisions that need human judgment, and any
+Give reviewers a short route through the change. Name the best starting file.
+Give the reading order. Name decisions that need human judgment. Identify
 generated or boilerplate files that do not need detailed review.
 -->
 
@@ -35,8 +35,8 @@ generated or boilerplate files that do not need detailed review.
 ## Business Value
 
 <!--
-State who benefits, what value is delivered, and how the outcome will be
-recognized or measured. Do not restate the implementation summary.
+State who benefits. State the value delivered. State how people will recognize
+or measure the result. Do not repeat the implementation summary.
 -->
 
 - **Who benefits:**
@@ -45,7 +45,7 @@ recognized or measured. Do not restate the implementation summary.
 
 ## Common Use Cases (if applicable)
 
-<!-- Give concrete examples of where this change is useful. Remove when not applicable. -->
+<!-- Give concrete examples of where this change is useful. Remove this section when it does not apply. -->
 
 - **Use case:**
 - **Example:**
@@ -53,9 +53,8 @@ recognized or measured. Do not restate the implementation summary.
 ## How It Works
 
 <!--
-Describe the design and flow at the level needed to understand the change.
-Include a small diagram or code example when it makes a non-trivial boundary
-clearer.
+Describe the design and flow at the level needed to understand the change. Add
+a small diagram or code example when it clarifies a non-trivial boundary.
 -->
 
 - **Design and flow:**
@@ -64,7 +63,7 @@ clearer.
 
 ## Observability (if applicable)
 
-<!-- Describe new or changed logs, metrics, traces, dashboards, and alerts. Remove when not applicable. -->
+<!-- Describe new or changed logs, metrics, traces, dashboards, and alerts. Remove this section when it does not apply. -->
 
 - **Signals:**
 - **Operational follow-up:**
@@ -72,9 +71,9 @@ clearer.
 ## Story Context
 
 <!--
-Make this PR useful when read beside the next nine PRs. Explain where it fits
-in the larger product or technical story, including stacked or dependent PRs.
-For a standalone change, say that it starts or completes the story.
+Make this PR useful when readers view it with the next nine PRs. Explain where
+it fits in the larger product or technical story. Include stacked or dependent
+PRs. For a standalone change, say that it starts or completes the story.
 -->
 
 - **Builds on:**
@@ -85,9 +84,9 @@ For a standalone change, say that it starts or completes the story.
 ## Testing and Evidence
 
 <!--
-Describe the tests built or changed as part of this PR, the existing tests
-that were run, the exact commands and results, and any manual validation.
-State meaningful gaps instead of implying that untested behavior is covered.
+Describe tests built or changed for this PR. List existing tests that you ran.
+Give exact commands and results. Describe manual validation. State meaningful
+gaps. Do not imply that untested behavior is covered.
 -->
 
 - **Tests added or changed:**
@@ -98,8 +97,8 @@ State meaningful gaps instead of implying that untested behavior is covered.
 ## Risk, Rollout, and Rollback (if applicable)
 
 <!--
-Keep this section for runtime, API, data, deployment, security, performance,
-or user-facing changes. Otherwise remove it.
+Keep this section for runtime, API, data, deployment, security, performance, or
+user-facing changes. Remove it when it does not apply.
 -->
 
 - **Risk level:**
@@ -110,9 +109,9 @@ or user-facing changes. Otherwise remove it.
 ## AI Contribution and Human Review (if applicable)
 
 <!--
-Keep this section when AI tools or agents contributed to the PR. Identify
-where AI generated, edited, or reviewed work; state the human decisions and
-verification performed; and call out unresolved uncertainty.
+Keep this section when AI tools or agents contributed to the PR. Identify where
+AI generated, edited, or reviewed work. State the human decisions and
+verification. State unresolved uncertainty.
 -->
 
 - **AI assistance and scope:**
@@ -123,8 +122,8 @@ verification performed; and call out unresolved uncertainty.
 ## Files Changed
 
 <!--
-List every new, modified, renamed, and deleted file with a brief purpose.
-Account for generated files, lock files, and unusually large diffs.
+List every new, modified, renamed, and deleted file. Give each file a brief
+purpose. Account for generated files, lock files, and unusually large diffs.
 -->
 
 - `path/to/file`: purpose of the change.
@@ -132,9 +131,9 @@ Account for generated files, lock files, and unusually large diffs.
 ## Breaking Changes and Migration (if applicable)
 
 <!--
-Keep this section for public API, contract, storage, or behavior changes.
-State "None" or remove it when not applicable. For a breaking change, include
-before and after examples plus clear migration steps.
+Keep this section for public API, contract, storage, or behavior changes. State
+"None" or remove it when it does not apply. For a breaking change, include
+before and after examples. Give clear migration steps.
 -->
 
 - **Breaking change:** Yes / No
