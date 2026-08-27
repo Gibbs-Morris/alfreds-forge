@@ -4,18 +4,18 @@ applyTo: '**/*.cs'
 
 # Keyed Services for Storage Providers
 
-Governing thought: Use keyed DI services for storage clients so multiple instances (Cosmos, Blob, Redis, etc.) can coexist in a single host for different purposes.
+Governing thought: Use keyed DI services so one host can use multiple Cosmos, Blob, Redis, or other storage instances for different purposes.
 
 > Drift check: Review module-owned `*Defaults` types and Aspire registration patterns before adding new keyed services.
 
 ## Rules (RFC 2119)
 
-- Library code that consumes cloud clients (BlobServiceClient, CosmosClient, Container, etc.) **MUST** use `[FromKeyedServices(<ModuleDefaults>.XxxServiceKey)]` on constructor parameters rather than expecting an unkeyed registration. Why: Enterprise apps require multiple storage accounts for different purposes (locking, state, uploads, archival).
-- Service keys **MUST** be module-owned in the package that defines the storage contract (for example `BrookCosmosDefaults`, `SnapshotCosmosDefaults`) and **MUST NOT** be centralized in a cross-module defaults hub. Why: Keeps ownership explicit and avoids accidental coupling.
-- Key constants **MUST** follow the pattern `"Alfred's Forge-{client-type}-{feature}"` (e.g., `"Alfred's Forge-cosmos-brooks"`, `"Alfred's Forge-blob-locking"`). Why: Provides unique, discoverable identifiers.
+- Library code consuming cloud clients (BlobServiceClient, CosmosClient, Container, etc.) **MUST** put `[FromKeyedServices(<ModuleDefaults>.XxxServiceKey)]` on constructor parameters. It **MUST NOT** expect an unkeyed registration. Why: Enterprise apps require multiple storage accounts for locking, state, uploads, and archival.
+- Service keys **MUST** belong to the package that defines the storage contract. Examples include `BrookCosmosDefaults` and `SnapshotCosmosDefaults`. Service keys **MUST NOT** use a cross-module defaults hub. Why: Keeps ownership explicit and avoids accidental coupling.
+- Key constants **MUST** use `"Alfred's Forge-{client-type}-{feature}"`. Examples include `"Alfred's Forge-cosmos-brooks"` and `"Alfred's Forge-blob-locking"`. Why: Provides unique, discoverable identifiers.
 - Registration documentation **MUST** comment which keyed services the library expects callers to provide. Why: Clarifies the DI contract.
 - Host applications **MUST** forward from their registration key (e.g., Aspire's `"cosmos"`, `"blobs"`) to the library's expected key using `AddKeyedSingleton`. Why: Decouples host naming from library requirements.
-- When a host needs both keyed (for library) and unkeyed (for its own services), it **MUST** explicitly forward using `AddSingleton(sp => sp.GetRequiredKeyedService<T>("key"))`. Why: Makes DI resolution explicit.
+- If a host needs both a keyed service for the library and an unkeyed service for its own services, it **MUST** explicitly forward with `AddSingleton(sp => sp.GetRequiredKeyedService<T>("key"))`. Why: Makes DI resolution explicit.
 
 ## Scope and Audience
 
@@ -54,10 +54,10 @@ builder.Services.AddSingleton(sp => sp.GetRequiredKeyedService<BlobServiceClient
 
 ## Core Principles
 
-- One client type, many instances: keyed services enable coexistence.
-- Keys are defined with module ownership alongside the consuming storage provider.
-- Library keys are stable contracts; host keys are deployment-specific.
-- Explicit forwarding makes the DI graph auditable.
+- Keyed services let one client type have many instances.
+- Define keys with module ownership beside the consuming storage provider.
+- Treat library keys as stable contracts and host keys as deployment-specific.
+- Use explicit forwarding to keep the DI graph auditable.
 
 ## Module-Owned Key Reference
 
@@ -73,5 +73,3 @@ See also module-owned storage/container defaults (for example `BrookCosmosDefaul
 
 - Service registration: `.github/instructions/service-registration.instructions.md`
 - Shared guardrails: `.github/instructions/shared-policies.instructions.md`
-
-
