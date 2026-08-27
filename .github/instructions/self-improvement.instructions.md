@@ -4,39 +4,52 @@ applyTo: '**'
 
 # Self-Improvement Learning System
 
-Governing thought: Agents record validated lessons from real-work failures into typed `self-taught-<domain>.instructions.md` files, creating persistent institutional memory that prevents repeated mistakes without conflicting with hand-authored rules.
+Governing thought: Agents record validated lessons from real-work failures in typed `self-taught-<domain>.instructions.md` files. These files build institutional memory without conflicting with hand-authored rules.
 
-> Drift check: Review this file and `.github/instructions/authoring.instructions.md` for the conflict-detection process before adding lessons; open relevant domain instruction files to check for overlap.
+> Drift check: Before adding a lesson, review this file and `.github/instructions/authoring.instructions.md` for conflict rules. Read relevant domain instruction files to check for overlap.
 
 ## Rules (RFC 2119)
 
-- When an agent encounters an issue that required retry, rework, or a non-obvious workaround, it **SHOULD** capture a concise lesson in the appropriate `self-taught-<domain>.instructions.md` file. Why: Prevents the same mistake in future conversations.
-- Self-taught files **MUST** live in `.github/instructions/` and follow the naming pattern `self-taught-<domain>.instructions.md` using kebab-case domain names. Why: Consistent discoverability alongside hand-authored instructions.
-- Self-taught files **MUST** follow the standard authoring template (YAML front matter with `applyTo`, H1, governing thought, drift check, Rules section, references). Why: Parseable by humans and automation.
-- Each lesson **MUST** be a single, concise bullet in the Rules section using an RFC 2119 keyword and a "Why:" suffix citing the observed failure (error message, build output, or specific scenario). Why: Token economy requires density; evidence anchors credibility.
-- Before adding a lesson, the agent **MUST** read all existing instruction files whose `applyTo` scope overlaps with the target self-taught file and verify the new lesson does not contradict any hand-authored rule. Why: Hand-authored rules are the source of truth; self-taught lessons supplement but never override.
-- If a proposed lesson conflicts with a hand-authored rule, the agent **MUST NOT** add the lesson and **SHOULD** instead record a note in `.thinking/` (if a task folder is active) explaining the conflict for human review. Why: Prevents institutional memory from corrupting authoritative policy.
-- Lessons in self-taught files **MUST** be treated as supplementary guidance; when any conflict exists between a self-taught lesson and a hand-authored instruction, the hand-authored instruction **MUST** take precedence. Why: Establishes a clear authority hierarchy.
-- Self-taught files **SHOULD** stay under 30 items per file; when a file approaches this limit, lessons **SHOULD** be reviewed and either promoted to the relevant hand-authored instruction file (with human approval) or retired if no longer relevant. Why: Keeps token footprint manageable per Rules Manager token-economy principles.
-- Duplicate or near-duplicate lessons **MUST NOT** be added; agents **MUST** check the existing lessons in the target file before writing. Why: Prevents bloat and redundancy.
-- Self-taught files **MUST NOT** contain opinions, preferences, or speculative guidance; every lesson **MUST** trace to a concrete, observed failure or inefficiency. Why: Empirical evidence only; no cargo-culting.
-- New domains **MAY** be created when no existing domain covers the lesson; the agent **MUST** select the `applyTo` pattern that best matches the domain scope. Why: Categories grow organically with the codebase.
+- When an agent encounters an issue that required a retry, rework, or non-obvious workaround, it **SHOULD** record a concise lesson in the appropriate `self-taught-<domain>.instructions.md` file. Why: Prevents the same mistake in future conversations.
+- Self-taught files **MUST** live in `.github/instructions/`. Why: Keeps them discoverable alongside hand-authored instructions.
+- Filenames **MUST** use `self-taught-<domain>.instructions.md` with a kebab-case domain. Why: Keeps file names predictable.
+- Self-taught files **MUST** follow the standard authoring template. Why: Enables parsing by people and tools.
+- The template **MUST** include YAML front matter with `applyTo`, H1, governing thought, Drift check, Rules section, and References. Why: Defines the required instruction structure.
+- Each lesson **MUST** be one concise bullet in the Rules section. Why: Keeps lessons dense.
+- Each lesson **MUST** use an RFC 2119 keyword. Why: Makes its requirement level clear.
+- Each lesson **MUST** end with a `Why:` suffix that cites an observed failure, error message, build output, or specific scenario. Why: Anchors the lesson in evidence.
+- Before adding a lesson, the agent **MUST** read every existing instruction file whose `applyTo` scope overlaps with the target self-taught file. Why: Hand-authored rules are the source of truth.
+- The agent **MUST** verify that a new lesson does not contradict a hand-authored rule. Why: Self-taught lessons supplement but never override hand-authored rules.
+- If a proposed lesson conflicts with a hand-authored rule, the agent **MUST NOT** add it. Why: Protects authoritative policy.
+- If a task folder is active, the agent **SHOULD** instead record the conflict in `.thinking/` for human review. Why: Preserves the reason for rejecting the lesson.
+- Agents **MUST** treat self-taught lessons as supplementary guidance. Why: Hand-authored instructions remain authoritative.
+- When a self-taught lesson conflicts with a hand-authored instruction, the hand-authored instruction **MUST** take precedence. Why: Maintains one authority hierarchy.
+- Each self-taught file **SHOULD** stay under 30 items. Why: Keeps the token footprint manageable.
+- When a file approaches 30 items, its lessons **SHOULD** be reviewed. Why: Prevents uncontrolled growth.
+- After review, lessons **SHOULD** either be promoted to the relevant hand-authored instruction file with human approval or be retired when no longer relevant. Why: Promotes proven guidance and removes obsolete guidance.
+- Duplicate or near-duplicate lessons **MUST NOT** be added. Why: Prevents bloat and redundancy.
+- Agents **MUST** check existing lessons in the target file before writing. Why: Detects duplicates.
+- Self-taught files **MUST NOT** contain opinions, preferences, or speculative guidance. Why: Keeps the evidence empirical.
+- Every lesson **MUST** trace to a concrete observed failure or inefficiency. Why: Prevents cargo-cult guidance.
+- New domains **MAY** be created when no existing domain covers the lesson. Why: Lets categories grow with the codebase.
+- The agent **MUST** select the `applyTo` pattern that best matches the domain scope. Why: Keeps each lesson correctly scoped.
 
 ## Scope and Audience
 
-All agents and contributors; applies whenever an agent encounters a recoverable failure, retry, or non-obvious workaround during any workflow.
+All agents and contributors. Use these rules when an agent encounters a recoverable failure, retry, or non-obvious workaround during any workflow.
 
-## At-a-Glance Quick-Start
+## Quick Start
 
-- Hit an issue that required retry or rework? After resolving it, add a one-bullet lesson to `self-taught-<domain>.instructions.md`.
-- Before adding: read overlapping instruction files, check for conflicts, check for duplicates, then add.
+- Capture one concise bullet in `self-taught-<domain>.instructions.md` after resolving a retry, rework, or non-obvious workaround.
+- Read overlapping instruction files before adding a lesson.
+- Check for conflicts and duplicates before writing.
 - Keep lessons evidence-based, concise, and RFC 2119-formatted.
-- Hand-authored rules always win; self-taught lessons are supplementary.
+- Treat hand-authored instructions as authoritative and self-taught lessons as supplementary.
 
 ## Domain Categories
 
 | Domain | `applyTo` | Covers |
-|--------|-----------|--------|
+| --- | --- | --- |
 | `build` | `'**'` | Build pipeline, MSBuild, project files, NuGet, CI |
 | `testing` | `'tests/**'` | Test patterns, coverage, mutation, determinism |
 | `csharp` | `'**/*.cs'` | C# idioms, compiler behavior, analyzers |
@@ -49,7 +62,7 @@ All agents and contributors; applies whenever an agent encounters a recoverable 
 
 ## Self-Taught File Template
 
-Use this structure for new `self-taught-<domain>.instructions.md` files:
+Use this structure for each new `self-taught-<domain>.instructions.md` file:
 
 ````markdown
 ---
@@ -76,28 +89,27 @@ Governing thought: Empirical lessons learned from real-work failures in <domain 
 
 Adapted from the Rules Manager workflow:
 
-1. **Identify scope**: Determine the `applyTo` of the target self-taught file.
-2. **Read overlapping files**: Read every `.github/instructions/*.instructions.md` whose `applyTo` intersects with the target scope.
-3. **Check contradiction**: Does the new lesson CONTRADICT any existing rule?
-4. **Check redundancy**: Does an existing rule already COVER this lesson, making it redundant?
-5. **Decide**: If contradicts → do not add. If already covered → do not add. If supplementary → add.
+1. **Identify scope.** Determine the `applyTo` of the target self-taught file.
+2. **Read overlapping files.** Read every `.github/instructions/*.instructions.md` whose `applyTo` intersects the target scope.
+3. **Check contradiction.** Check whether the new lesson **CONTRADICT**s an existing rule.
+4. **Check redundancy.** Check whether an existing rule already **COVER**s the lesson.
+5. **Decide.** Do not add a lesson that conflicts or duplicates an existing rule. Add a supplementary lesson.
 
 ## Lesson Lifecycle
 
-1. **Capture**: Agent observes a failure or retry → writes a concise bullet in the appropriate file after conflict and duplicate checking.
-2. **Accumulate**: Lessons collect over multiple conversations; each file stays under 30 items.
-3. **Promote**: When a lesson proves universally valuable, it can be proposed for inclusion in the relevant hand-authored instruction file (requires human approval).
-4. **Retire**: Lessons that are no longer relevant (fixed by tooling, superseded by a promoted rule) are candidates for removal during periodic review.
+1. **Capture.** After an agent observes a retry, rework, or other qualifying event, it writes a concise bullet in the appropriate file after conflict and duplicate checks.
+2. **Accumulate.** Lessons collect over multiple conversations. Each file stays under 30 items.
+3. **Promote.** When a lesson proves universally valuable, it can be proposed for the relevant hand-authored instruction file. Human approval is required.
+4. **Retire.** A lesson can be removed during periodic review when tooling fixes it or a promoted rule supersedes it.
 
 ## Core Principles
 
-- Empirical, not speculative: every lesson traces to an observed event.
-- Supplementary, not authoritative: hand-written rules always win.
-- Token-conscious: concise bullets, scoped `applyTo`, size limits.
-- Conflict-aware: check before writing, using Rules Manager-style validation.
+- Use evidence, not speculation. Trace every lesson to an observed event.
+- Keep self-taught guidance supplementary. Hand-authored rules take precedence.
+- Keep token use low with concise lessons, scoped `applyTo`, and file size limits.
+- Check conflicts before writing. Use the Rules Manager process.
 
 ## References
 
 - Instruction authoring: `.github/instructions/authoring.instructions.md`
 - Shared guardrails: `.github/instructions/shared-policies.instructions.md`
-
