@@ -4,24 +4,29 @@ applyTo: 'docs/Docusaurus/docs/**/*.{md,mdx}'
 
 # Feature Documentation Structure
 
-Governing thought: Alfred's Forge is migrating toward a clearer page-type-driven documentation system, but feature-oriented folders still need consistent structure and content placement while that migration is in progress.
+Governing thought: Alfred's Forge is moving to page-type-driven documentation. Feature-oriented folders still need consistent structure during the transition.
 
 > Drift check: Align this file with `docs/Docusaurus/docs/contributing/documentation-guide.md` and the current Docusaurus sidebar behavior.
 
 ## Rules (RFC 2119)
 
-- Feature documentation **MUST** obey the selected page type before it obeys historical folder shape. Why: Page type is the current authoring contract.
-- Existing feature-oriented folders **MAY** remain in place until they are touched, but new public folders **SHOULD** use `_category_.yml` and **SHOULD** prefer generated indexes for section navigation. Why: The repo is in a hybrid migration.
-- Feature folders **MUST NOT** become catch-all buckets that mix getting-started, tutorial, reference, troubleshooting, and internals content into one long page. Why: The new governance model is page-type-driven.
-- Where a feature needs multiple page types, authors **MUST** split the content into separate pages and cross-link them. Why: Readers should not wade through unrelated material.
+- Feature documentation **MUST** follow the selected page type before historical folder shape. Why: Page type is the current authoring contract.
+- Existing feature-oriented folders **MAY** remain until authors touch them. Why: The repo is in a hybrid migration.
+- New public folders **SHOULD** use `_category_.yml`. Why: The repo is in a hybrid migration.
+- New public folders **SHOULD** prefer generated indexes for section navigation. Why: The repo is in a hybrid migration.
+- Feature folders **MUST NOT** mix getting-started, tutorial, reference, troubleshooting, and internals content into one long page. Why: The new governance model is page-type-driven.
+- Authors **MUST** split content into separate pages when a feature needs multiple page types. Why: Readers should not wade through unrelated material.
+- Authors **MUST** cross-link the separate pages. Why: Readers should not wade through unrelated material.
 - Content placement within a feature area **SHOULD** make the page type obvious from the filename or neighboring docs when practical. Why: Discoverability improves when filenames and purpose line up.
-- Feature-level entry pages **SHOULD** function as orientation pages with links to narrower child pages instead of absorbing all content categories. Why: Entry pages should guide, not sprawl.
-- Migration guides **MUST** remain isolated from release notes and generic feature overviews. Why: Upgrade risk deserves its own surface.
-- Troubleshooting content **MUST** remain symptom-driven even when it is nested under a feature folder. Why: Troubleshooting should start from the failure, not the subsystem.
+- Feature-level entry pages **SHOULD** orient readers with links to narrower child pages. Why: Entry pages should guide, not sprawl.
+- Feature-level entry pages **SHOULD NOT** absorb all content categories. Why: Entry pages should guide, not sprawl.
+- Migration guides **MUST** remain isolated from release notes. Why: Upgrade risk deserves its own surface.
+- Migration guides **MUST** remain isolated from generic feature overviews. Why: Upgrade risk deserves its own surface.
+- Troubleshooting content **MUST** remain symptom-driven when nested under a feature folder. Why: Troubleshooting should start from the failure, not the subsystem.
 
 ## Scope and Audience
 
-Contributors and agents updating feature-oriented docs while the repository transitions toward stronger page-type governance.
+Contributors and agents updating feature-oriented docs during the transition to stronger page-type governance.
 
 ## At-a-Glance Quick-Start
 
@@ -34,10 +39,10 @@ Contributors and agents updating feature-oriented docs while the repository tran
 
 During the current transition:
 
-- feature folders are still allowed
-- page type still governs structure and content rules
-- new sections should prefer generated-index category metadata
-- touched legacy pages should move closer to the new model when it is safe to do so
+- Feature folders remain allowed.
+- Page type governs structure and content rules.
+- New sections should prefer generated-index category metadata.
+- Touched legacy pages should move closer to the new model when safe.
 
 ## Core Principles
 
@@ -50,5 +55,4 @@ During the current transition:
 - Documentation guide: `docs/Docusaurus/docs/contributing/documentation-guide.md`
 - Documentation page focus: `.github/instructions/documentation-page-focus.instructions.md`
 - Documentation authoring: `.github/instructions/documentation-authoring.instructions.md`
-
 
