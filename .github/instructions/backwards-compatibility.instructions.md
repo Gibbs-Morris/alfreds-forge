@@ -4,41 +4,42 @@ applyTo: '**'
 
 # Backwards Compatibility Policy
 
-Governing thought: While the repository version is pre-1.0.0, breaking changes are freely permitted; agents must not add compatibility shims for patterns that only exist on the current branch.
+Governing thought: Before version 1.0.0, allow breaking changes and do not preserve patterns that exist only on the current branch.
 
-> Drift check: Check `GitVersion.yml` (`next-version`) to confirm the current version bracket before applying compatibility rules.
+> Drift check: Check `GitVersion.yml` and its `next-version` before applying this policy.
 
 ## Rules (RFC 2119)
 
-- **Pre-1.0 Freedom** - While the GitVersion `next-version` is below `1.0.0`, backwards compatibility **MUST NOT** be a constraint; any public API, contract, event shape, serialization layout, or behavior **MAY** be changed freely provided CI/CD pipelines pass (build + tests). Why: The framework is pre-release; shipping velocity and API quality outweigh stability guarantees.
-- **Branch-Scoped Work Has No Legacy** - When working on a feature or chore branch, agents **MUST NOT** add backwards-compatibility shims, wrappers, adapters, or V2 types to preserve patterns introduced earlier on the same branch; the only contracts that matter are those present on `main`. If unsure, agents **MUST** compare the branch diff against `main` to determine whether the "old" pattern even exists in the merge target. Why: Agents have repeatedly added unnecessary compatibility code for patterns that will never exist in `main`, causing extra complexity and confusion.
-- **Breaking Changes Must Update Consumers** - When a contract change on a branch breaks repository applications or tests, the same PR **MUST** update those consumers to compile and pass. Why: CI/CD must stay green; downstream breakage is not deferred.
-- **Rolling-Update Compatibility (Post-1.0 Only)** - Once the repository reaches `1.0.0`, rolling-update compatibility rules apply: serialization member IDs and storage attribute names **MUST NOT** change without a versioned migration path; obsolete wrappers **SHOULD** be marked `[Obsolete]` and removed at the next major version at the latest. Why: Production deployments require orderly transitions, but compatibility shims must not linger.
-- **Obsolete Wrappers Must Be Short-Lived** - Any wrapper, adapter, or compatibility shim introduced for a rolling update **MUST** be annotated with `[Obsolete("Remove in vX.0")]` and **SHOULD** be removed in the next planned major release. Why: Long-lived shims become invisible debt.
-- **Event/Snapshot Storage Names Are Separate From API Compatibility** - `[EventStorageName]` and `[SnapshotStorageName]` attribute values **MUST NOT** change once data has been persisted to a real (non-test) store, regardless of version bracket. Storage identity is a data-integrity concern, not an API-compatibility concern. Why: Changing a storage name orphans previously written data.
+- Before version 1.0.0, backwards compatibility **MUST NOT** constrain changes. Public APIs, contracts, event shapes, serialization layouts, and behavior **MAY** change when CI/CD passes its build and test gates. Why: The framework is pre-release.
+- Agents **MUST NOT** add compatibility shims, wrappers, adapters, or V2 types for patterns introduced earlier on the same feature or chore branch. Only contracts on `main` define the compatibility baseline. Why: Branch-local patterns will not exist after merge.
+- When a branch contract change breaks repository applications or tests, the same pull request **MUST** update those consumers. Why: CI/CD must stay green.
+- After version 1.0.0, serialization member IDs and storage attribute names **MUST NOT** change without a versioned migration path. This rolling-update rule applies only after version 1.0.0. Why: Production deployments need orderly transitions.
+- A compatibility wrapper, adapter, or shim added for a rolling update **MUST** have `[Obsolete("Remove in vX.0")]`. Authors **SHOULD** remove it in the next planned major release. Why: Keeps compatibility code short-lived.
+- `[EventStorageName]` and `[SnapshotStorageName]` values **MUST NOT** change after a real, non-test store persists data. This rule applies at every version. Why: A changed storage name can orphan existing data.
+- When unsure whether an old pattern exists on `main`, agents **MUST** compare the branch with `main` before adding compatibility code. Why: Prevents unnecessary shims.
 
 ## Scope and Audience
 
-All contributors and agents making code changes in this repository. This policy overrides any other instruction that implies backwards compatibility is required by default while the repo is pre-1.0.
+Use these rules for all contributors and agents who change code in this repository. Before version 1.0.0, this policy overrides guidance that requires backwards compatibility by default.
 
-## At-a-Glance Quick-Start
+## Quick Start
 
-- **Pre-1.0?** Break anything. Fix affected applications and tests in the same PR.
-- **On a branch?** Only preserve contracts that exist on `main`, never patterns you introduced earlier in the same branch.
-- **Adding a wrapper for compat?** Mark it `[Obsolete]` immediately and plan removal.
-- **Changing a storage name?** Stop—that is a data-integrity rule, not a compatibility rule; storage names are immutable once persisted.
+- Check `GitVersion.yml`. If `next-version` is below `1.0.0`, do not treat compatibility as a constraint.
+- Preserve only contracts that exist on `main`.
+- Update all repository consumers in the same pull request when a contract change breaks them.
+- Mark rolling-update shims with `[Obsolete]` and plan their removal.
+- Never change persisted event or snapshot storage names.
 
 ## Core Principles
 
-- Ship quality over ceremony: pre-release means iterate fast.
-- Branch work is ephemeral; only `main` defines the compatibility baseline.
-- Compatibility shims are technical debt; minimize their lifetime.
-- Storage identity (persisted attribute names) is sacred even when API compatibility is not.
+- Prefer shipping quality over compatibility ceremony while the project is pre-release.
+- Treat branch work as temporary. Use `main` as the compatibility baseline.
+- Keep compatibility shims short-lived.
+- Treat persisted storage identity as a data-integrity rule, not an API-compatibility rule.
 
 ## References
 
-- GitVersion config: `GitVersion.yml` (`next-version` field)
+- GitVersion config: `GitVersion.yml` (`next-version`)
 - Orleans serialization: `.github/instructions/orleans-serialization.instructions.md`
 - Storage naming: `.github/instructions/storage-type-naming.instructions.md`
 - Shared guardrails: `.github/instructions/shared-policies.instructions.md`
-
