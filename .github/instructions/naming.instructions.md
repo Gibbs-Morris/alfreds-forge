@@ -4,19 +4,37 @@ applyTo: '**/*.cs'
 
 # C# Naming and XML Documentation
 
-Governing thought: Use feature-centric namespaces, clear PascalCase identifiers, and factual XML docs enforced by StyleCop.
+Governing thought: Use feature-centric namespaces, clear PascalCase identifiers, and factual XML documentation enforced by StyleCop.
 
-> Drift check: StyleCop/analysis settings live in `Directory.Build.props` and `.editorconfig`; review them before editing.
+> Drift check: Review `Directory.Build.props` and `.editorconfig` for StyleCop and analysis settings before editing.
 
 ## Rules (RFC 2119)
 
-- Naming/StyleCop rules (SA13xx/SA16xx) **MUST** be treated as build-breaking; violations **MUST** be fixed, not suppressed. Why: Keeps naming/docs consistent.
-- Namespaces **MUST** be feature-oriented (no `Services/Models` silos), max ten PascalCase segments, no underscores; abbreviations **MUST** be industry-standard only. Why: Improves discoverability.
-- Types **MUST** use PascalCase nouns; interfaces **MUST** prefix `I`; enums **MUST** be singular with PascalCase members. Why: Aligns with .NET guidelines.
-- Methods **MUST** use PascalCase verb phrases; properties **MUST** be PascalCase nouns; booleans **MUST** start with `Is/Has/Can/Should`; DI properties **MUST** follow `private Type Name { get; }`; private fields/locals **MUST** be camelCase with no underscore; constants **MUST** be PascalCase. Why: Keeps identifiers unambiguous.
-- Public (and internal when exposed) symbols **MUST** have XML docs with `<summary>` (imperative voice), `<param>`/`<typeparam>`/`<returns>` as applicable; text **MUST** be factual (no TODOs). Why: Ensures IntelliSense and docs quality.
-- Abstract base classes **SHOULD NOT** use "Base" unless intended for inheritance; Orleans abstract grains ending in "Base" **MAY** follow Orleans guidance. Why: Avoids noisy suffixes unless necessary.
-- Documentation for private/internal members **SHOULD** exist only when behavior is non-trivial or exposed via `InternalsVisibleTo`. Why: Balances value vs noise.
+- Naming and StyleCop rules (SA13xx/SA16xx) **MUST** be build-breaking. Why: Keeps naming and documentation consistent.
+- Contributors **MUST** fix naming and StyleCop violations. Why: Keeps builds compliant.
+- Contributors **MUST NOT** suppress naming and StyleCop violations. Why: Prevents hidden defects.
+- Namespaces **MUST** be feature-oriented, not `Services/Models` silos. Why: Improves discoverability.
+- Namespaces **MUST** contain no more than ten PascalCase segments. Why: Keeps names readable.
+- Namespaces **MUST NOT** contain underscores. Why: Keeps names consistent.
+- Abbreviations **MUST** use industry-standard forms only. Why: Prevents ambiguous names.
+- Types **MUST** use PascalCase nouns. Why: Aligns with .NET guidelines.
+- Interfaces **MUST** prefix `I`. Why: Identifies contracts.
+- Enums **MUST** be singular. Why: Aligns with .NET guidelines.
+- Enum members **MUST** use PascalCase. Why: Aligns with .NET guidelines.
+- Methods **MUST** use PascalCase verb phrases. Why: Identifies actions.
+- Properties **MUST** use PascalCase nouns. Why: Identifies values.
+- Boolean identifiers **MUST** start with `Is/Has/Can/Should`. Why: Identifies Boolean values.
+- Injected dependencies **MUST** use get-only DI properties, such as `private Type Name { get; }`. Why: Supports consistent dependency injection.
+- Private fields and locals **MUST** use camelCase. Why: Aligns with C# conventions.
+- Private fields and locals **MUST NOT** use underscores. Why: Keeps identifiers consistent.
+- Constants **MUST** use PascalCase. Why: Aligns with C# conventions.
+- Public symbols and exposed internal symbols **MUST** have XML documentation. Why: Supports IntelliSense and documentation quality.
+- XML documentation **MUST** include `<summary>` in the imperative voice. Why: Documents each symbol clearly.
+- XML documentation **MUST** include `<param>`, `<typeparam>`, and `<returns>` tags when applicable. Why: Keeps documentation aligned with the API.
+- Documentation text **MUST** be factual and contain no TODOs. Why: Prevents incomplete guidance.
+- Abstract base classes **SHOULD NOT** use `Base` unless they support inheritance. Why: Avoids unnecessary suffixes.
+- Orleans abstract grains ending in `Base` **MAY** follow Orleans guidance. Why: Preserves the Orleans exception.
+- Documentation for private and internal members **SHOULD** exist only when behavior is non-trivial or exposed via `InternalsVisibleTo`. Why: Balances value and noise.
 
 ## Scope and Audience
 
@@ -24,16 +42,19 @@ All C# contributors.
 
 ## At-a-Glance Quick-Start
 
-- Derive namespaces from company/product/feature; keep <=10 segments.
-- Use PascalCase nouns for types/properties/constants; `I`-prefixed interfaces; camelCase locals/fields without underscores.
-- Prefix booleans with `Is/Has/Can/Should`; keep DI properties as get-only.
-- Write concise, factual XML docs for public APIs; validate tags match parameters.
+- Derive namespaces from company/product/feature. Keep <=10 segments.
+- Use PascalCase nouns for types, properties, and constants.
+- Prefix interfaces with `I`.
+- Use camelCase for locals and fields. Do not use underscores.
+- Prefix booleans with `Is/Has/Can/Should`.
+- Keep injected dependencies in get-only DI properties.
+- Write concise, factual XML docs for public APIs. Validate tags against parameters.
 
 ## Core Principles
 
 - Feature-first organization improves discovery.
 - Consistent naming reduces StyleCop churn and reviewer overhead.
-- Documentation should explain intent and usage without speculation.
+- Documentation explains intent and usage without speculation.
 
 ## Domain Type Suffixes (Event Sourcing)
 
@@ -53,5 +74,4 @@ All C# contributors.
 - C# standards: `.github/instructions/csharp.instructions.md`
 - Domain modeling: `.github/instructions/domain-modeling.instructions.md`
 - Deterministic placement: `.github/instructions/namespace-folder-placement.instructions.md`
-
 
