@@ -4,45 +4,39 @@ applyTo: '**'
 
 # Build Issue Remediation Protocol
 
-Governing thought: Fix each warning/error with the smallest safe edit in at most five focused attempts, deferring with context when blocked.
+Governing thought: Fix each warning or error with the smallest safe edit. Try one issue no more than five times before you defer it with context.
 
-> Drift check: Open the build/cleanup/test scripts in `eng/src/agent-scripts/` before running them; scripts remain authoritative for switches and order.
+> Drift check: Read the build, cleanup, and test scripts in `eng/src/agent-scripts/` before running them. Those scripts define the switches and order.
 
 ## Rules (RFC 2119)
 
-- A single issue (one warning/error at a specific location) **MUST** get no more than five focused fix attempts before deferral. Why: Prevents thrash.
-- When deferring, agents **MUST** leave the code compiling/consistent and **MUST** create/update a `.scratchpad/tasks/...` item with `status=deferred`. Why: Keeps the tree stable and enables pickup.
-- Agents **MUST NOT** broaden scope: fix only the lines required; large refactors are out of scope. Why: Minimizes regression risk.
-- Agents **MUST NOT** relax analyzers, add `NoWarn`, edit generated code, or introduce `[SuppressMessage]`/`#pragma` without explicit approval. Why: Zero-warnings policy is non-negotiable.
-- Project files **MUST NOT** add package versions; package changes **MUST** follow Central Package Management. Why: Avoids NU10xx noise and drift.
-- Agents **MUST** obey `.editorconfig`/`Directory.Build.props` conventions while fixing. Why: Keeps formatting and settings consistent.
+- Each warning or error at one location **MUST** receive no more than five focused fix attempts. Why: Prevents thrashing.
+- When an issue remains after five attempts, agents **MUST** leave the code compiling and consistent. Why: Keeps the tree usable.
+- When agents defer an issue, they **MUST** create or update `.scratchpad/tasks/...` with `status=deferred`. Why: Records the blocker for later work.
+- Agents **MUST NOT** broaden the issue scope. They **MUST** change only the required lines. Large refactors **MUST NOT** be part of remediation. Why: Limits regression risk.
+- Agents **MUST NOT** relax analyzers, add `NoWarn`, edit generated code, or add `[SuppressMessage]` or `#pragma` without explicit approval. Why: Zero-warning policy is mandatory.
+- Project files **MUST NOT** add package versions. Package changes **MUST** use Central Package Management. Why: Prevents NU10xx errors and version drift.
+- Agents **MUST** follow `.editorconfig` and `Directory.Build.props`. Why: Keeps formatting and settings consistent.
 
 ## Scope and Audience
 
-Agents fixing build/analyzer/style issues in this repository.
+Use these rules when you fix build, analyzer, or style issues in this repository.
 
-## At-a-Glance Quick-Start
+## Quick Start
 
-- Reproduce: `pwsh ./eng/src/agent-scripts/build-alfreds-forge-solution.ps1`, then `pwsh ./eng/src/agent-scripts/clean-up-alfreds-forge-solution.ps1`.
-- Plan: pick one warning/error code and one file at a time.
-- Fix: smallest edit only; prefer code changes over suppression.
-- Verify: rerun build/cleanup; stop after five attempts per issue and defer with a scratchpad task if still failing.
+1. Run the relevant build and cleanup scripts. Record warning and error codes.
+2. Choose one issue and one file.
+3. Apply the smallest safe fix. Prefer code changes over suppressions.
+4. Rerun build and cleanup.
+5. Stop after five attempts for one issue. If it still fails, record its code, path, reason, and next step in a deferred scratchpad task.
 
 ## Core Principles
 
-- Precision over breadth; do not reformat unrelated code.
-- Count attempts per edit/verify cycle.
-- Keep shared guardrails in mind (zero warnings, CPM, DI/logging patterns).
-
-## Procedure
-
-1. Run the relevant build/cleanup script; capture warning/error codes.
-2. Choose one issue; design the minimal fix (initializers, null checks, `using` declarations, etc.).
-3. Apply the fix; rerun build/cleanup to confirm no new warnings.
-4. If unresolved after five cycles, revert to last compiling state, add a deferred scratchpad task with code/path/reason, and move on.
+- Prefer precision over breadth. Do not reformat unrelated code.
+- Count one attempt for each edit and verification cycle.
+- Apply the shared zero-warning, Central Package Management, DI, and logging guardrails.
 
 ## References
 
 - Shared guardrails: `.github/instructions/shared-policies.instructions.md`
 - Quality gates: `.github/instructions/build-rules.instructions.md`
-
