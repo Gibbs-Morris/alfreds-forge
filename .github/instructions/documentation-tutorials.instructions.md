@@ -4,18 +4,18 @@ applyTo: 'docs/Docusaurus/docs/**/*tutorial*.{md,mdx}'
 
 # Tutorial Documentation
 
-Governing thought: Tutorials teach Alfred's Forge through one linear, verified path where the writer is responsible for the reader's safety and success.
+Governing thought: Tutorials teach Alfred's Forge through one verified, linear path.
 
 > Drift check: Keep this file aligned with `docs/Docusaurus/docs/contributing/documentation-tutorials.md`.
 
 ## Rules (RFC 2119)
 
-- This file **MUST** be applied only when the page is classified as `tutorials`. Why: Tutorials have a different contract from how-to guides and reference pages.
-- Tutorials **MUST** use one linear path from start to finish. Why: Guided learning should not force the reader to choose branches constantly.
-- Tutorials **MUST** include strict step ordering, exact code or commands, expected results, verification checkpoints, a recap, and next steps. Why: The writer is responsible for keeping the reader on track.
-- Tutorials **MUST** use complete, verified code and **MUST NOT** require the reader to infer hidden setup or missing files. Why: Guessing breaks learning flow.
-- Tutorials **SHOULD** introduce concepts only when the next step needs them and **SHOULD** link deeper explanation out to concept pages. Why: Tutorials should teach by doing, not by lecturing.
-- Tutorials **MUST NOT** become architecture essays, option matrices, or API references. Why: Those belong on other page types.
+- Authors **MUST** apply this file only when the page is classified as `tutorials`. Why: Tutorials differ from how-to guides and reference pages.
+- Tutorials **MUST** use one linear path from start to finish. Why: Guided learning should not force constant branching.
+- Tutorials **MUST** include strict step ordering, exact code or commands, expected results, verification checkpoints, a recap, and next steps. Why: These keep readers on track.
+- Tutorials **MUST** use complete, verified code. Tutorials **MUST NOT** require readers to infer hidden setup or missing files. Why: Guessing breaks the learning flow.
+- Tutorials **SHOULD** introduce concepts only when the next step needs them. Tutorials **SHOULD** link deeper explanations to concept pages. Why: Tutorials should teach by doing.
+- Tutorials **MUST NOT** become architecture essays, option matrices, or API references. Why: Other page types cover those topics.
 
 ## Scope and Audience
 
@@ -25,5 +25,3 @@ Contributors and agents authoring tutorial pages for Alfred's Forge documentatio
 
 - Public guide: `docs/Docusaurus/docs/contributing/documentation-tutorials.md`
 - General authoring: `.github/instructions/documentation-authoring.instructions.md`
-
-
