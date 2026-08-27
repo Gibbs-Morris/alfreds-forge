@@ -36,12 +36,18 @@ Governing thought: PR descriptions should communicate business value, explain th
 
 - PR descriptions **MUST** be updated on each commit/push when a PR exists for the branch. Why: Keeps the description synchronized with the actual changes.
 - Authors **MUST** compare the branch against `main` to understand all changes before writing or updating the description. Why: Ensures the description reflects the complete diff.
+- Authors **MUST** lead with first-principles context explaining the problem or opportunity, the change, the expected impact, and the scope/non-goals. Why: Reviewers need the intended outcome before evaluating implementation details.
+- Authors **MUST** include a How to Read This PR and Code section naming the review path, starting point, and areas requiring human judgment. Why: Directs attention to the code and decisions that matter most.
 - Authors **MUST** include a Business Value section explaining why the change matters. Why: Reviewers and future maintainers need context beyond "what" to understand "why".
 - Authors **MUST** include a How It Works section with architectural overview. Why: Holistic understanding prevents incorrect usage and aids code review.
+- Authors **MUST** include Story Context describing what the PR builds on, delivers, enables, and defers. Why: A sequence of PRs should remain understandable as one evolving product story.
+- Authors **MUST** include Testing and Evidence describing tests added or changed, commands and results, manual validation, and known gaps. Why: A claimed change is not trustworthy without reproducible evidence.
+- AI-assisted PRs **MUST** identify AI's scope, the human decisions and verification performed, and unresolved uncertainty. Why: Human reviewers must be able to distinguish generated work from verified behavior.
 - Authors **SHOULD** include Common Use Cases with concrete examples across different domains. Why: Helps users understand applicability to their problems.
 - Authors **SHOULD** include architecture diagrams (ASCII or Mermaid) for non-trivial changes. Why: Visual representations accelerate understanding.
 - Authors **MUST** list all new and modified files with brief descriptions. Why: Provides a roadmap for reviewers and documents the change scope.
 - Authors **MUST** document breaking changes with before/after code examples. Why: Enables users to migrate without guessing.
+- Risk, rollout, rollback, migration, security, and performance sections **SHOULD** be kept when relevant and removed when they are not. Why: Conditional prompts surface meaningful risk without making routine PRs bureaucratic.
 - Authors **SHOULD** include code examples that demonstrate typical usage. Why: Copy-paste examples reduce adoption friction.
 - Descriptions **MUST NOT** contain stale information from previous iterations. Why: Outdated content misleads reviewers.
 
@@ -55,7 +61,7 @@ All contributors creating or updating pull requests.
 - Before writing: `git diff main...HEAD --stat` to see all changes
 - Use the PR template in `.github/PULL_REQUEST_TEMPLATE.md`
 - Update title and description on every push if PR exists
-- Focus on business value first, implementation details second
+- Start with first-principles change and impact, then guide the code review
 
 ## Procedure
 
@@ -63,34 +69,42 @@ All contributors creating or updating pull requests.
 
 1. Run `git diff main...HEAD --stat` to list all changed files
 2. Read through each changed file to understand what was done
-3. Identify the business problem being solved
-4. Write the Business Value section first
-5. Add Common Use Cases with real-world examples
-6. Document How It Works with architecture overview
-7. List all files changed with brief descriptions
-8. Add code examples for new APIs or patterns
-9. Document any breaking changes with migration guidance
+3. Identify the problem, desired outcome, and concrete impact
+4. Write the code-reading guide so reviewers can navigate the change
+5. Write the Business Value section
+6. Add Story Context for preceding, current, and follow-up PRs
+7. Document How It Works with architecture overview
+8. Record tests, commands, results, manual validation, and known gaps
+9. List all files changed with brief descriptions
+10. Add code examples for new APIs or patterns
+11. Document relevant risk and any breaking changes with migration guidance
+12. Disclose AI contribution and human verification when applicable
 
 ### Updating on Subsequent Commits
 
 1. After each commit/push, review changes since last description update
-2. Update file lists if files were added/removed/renamed
-3. Update code examples if APIs changed
-4. Verify Business Value still accurately reflects the PR scope
-5. Remove any stale information that no longer applies
+2. Update first-principles impact, scope, and the code-reading guide if the change evolved
+3. Update Story Context if dependencies, sequencing, or follow-up work changed
+4. Update file lists if files were added/removed/renamed
+5. Update code examples if APIs changed
+6. Update testing evidence and AI/human-review notes when verification changes
+7. Verify Business Value still accurately reflects the PR scope
+8. Remove any stale information that no longer applies
 
 ## Template Structure
 
-The PR template includes these sections (all should be completed for significant changes):
+The PR template includes these core sections:
 
-1. **Business Value** - Why this matters (required)
-2. **Common Use Cases** - Real-world applications (recommended)
-3. **How It Works** - Architecture and design (required for non-trivial changes)
-4. **Observability** - Metrics/logging added (if applicable)
-5. **Files Changed** - Complete file manifest (required)
-6. **Quality Gates** - Checklist of requirements (required)
-7. **Migration Notes** - Breaking change guidance (if applicable)
-8. **Related Issues** - Links to issues/discussions (if applicable)
+1. **First Principles: What Changes and What Is the Impact?** - Problem, outcome, impact, and non-goals (required)
+2. **How to Read This PR and Code** - Review route and human-focus areas (required)
+3. **Business Value** - Who benefits and why it matters (required)
+4. **How It Works** - Architecture, flow, boundaries, and trade-offs (required for non-trivial changes)
+5. **Story Context** - Place in the larger product or technical sequence (required)
+6. **Testing and Evidence** - Tests, commands, results, validation, and gaps (required)
+7. **Files Changed** - Complete file manifest (required)
+8. **Checklist** - Merge-readiness confirmations (required)
+
+The template also provides conditional sections for common use cases, observability, risk/rollout/rollback, AI contribution, breaking changes/migration, and related issues/dependencies.
 
 ## Good vs Bad Examples
 
@@ -112,9 +126,12 @@ The PR template includes these sections (all should be completed for significant
 
 ## Core Principles
 
-- Lead with business value, not implementation details
+- Lead with first-principles change and impact, not implementation details
+- Make the review path explicit so humans can focus their judgment
 - Write for the reviewer who has no context
+- Make each PR self-contained while connecting it to the larger story
 - Include enough detail that someone could implement similar functionality
+- Treat tests and results as evidence, not a checkbox
 - Keep descriptions synchronized with actual code changes
 - Use tables and diagrams to convey complex relationships
 
@@ -123,5 +140,3 @@ The PR template includes these sections (all should be completed for significant
 - PR template: `.github/PULL_REQUEST_TEMPLATE.md`
 - Review guidelines: `.github/instructions/pull-request-reviews.instructions.md`
 - Markdown conventions: `.github/instructions/markdown.instructions.md`
-
-
