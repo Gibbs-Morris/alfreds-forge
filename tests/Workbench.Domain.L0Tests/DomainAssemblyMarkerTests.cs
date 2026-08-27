@@ -1,7 +1,7 @@
 using FluentAssertions;
 
 
-namespace Domain.L0Tests;
+namespace Workbench.Domain.L0Tests;
 
 /// <summary>
 ///     Verifies baseline domain assembly marker behavior.

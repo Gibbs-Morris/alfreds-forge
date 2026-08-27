@@ -1,9 +1,9 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/Domain/Domain.csproj" />
+    <Project Path="src/Workbench.Domain/Workbench.Domain.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/Domain.L0Tests/Domain.L0Tests.csproj" />
+    <Project Path="tests/Workbench.Domain.L0Tests/Workbench.Domain.L0Tests.csproj" />
   </Folder>
   <Folder Name="/Workflows/">
     <File Path=".github/workflows/full-build.yml" />

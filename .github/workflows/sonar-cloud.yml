@@ -18,6 +18,7 @@ env:
   SONAR_PROJECT_KEY: "Gibbs-Morris_alfreds-forge"
   SONAR_ORGANIZATION: "gibbs-morris"
   SONAR_HOST_URL: "https://sonarcloud.io"
+  SONAR_COVERAGE_EXCLUSIONS: "src/Workbench.Client/Program.cs,src/Workbench.Client/App.razor,src/Workbench.Client/Layout/MainLayout.razor,src/Workbench.Gateway/Program.cs,src/Workbench.Runtime/Program.cs,src/Workbench.AppHost/Program.cs"
   CONFIGURATION: Release
   SOLUTION_PATH: ${{ github.workspace }}/alfreds-forge.slnx
 
@@ -89,7 +90,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet tool run dotnet-sonarscanner begin /k:"${{ env.SONAR_PROJECT_KEY }}" /o:"${{ env.SONAR_ORGANIZATION }}" /d:sonar.token="$SONAR_TOKEN" /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" /v:${{ steps.gitversion.outputs.SemVer }} /d:"sonar.cs.vscoveragexml.reportsPaths=coverage.xml" /d:sonar.exclusions="**/*.lock.json, **/*.DotSettings,**/packages.lock.json,docs/**"
+          dotnet tool run dotnet-sonarscanner begin /k:"${{ env.SONAR_PROJECT_KEY }}" /o:"${{ env.SONAR_ORGANIZATION }}" /d:sonar.token="$SONAR_TOKEN" /d:sonar.host.url="${{ env.SONAR_HOST_URL }}" /v:${{ steps.gitversion.outputs.SemVer }} /d:"sonar.cs.vscoveragexml.reportsPaths=coverage.xml" /d:sonar.exclusions="**/*.lock.json, **/*.DotSettings,**/packages.lock.json,docs/**" /d:sonar.coverage.exclusions="${{ env.SONAR_COVERAGE_EXCLUSIONS }}"
           dotnet restore ${{ env.SOLUTION_PATH }}
           dotnet build ${{ env.SOLUTION_PATH }} --configuration ${{ env.CONFIGURATION }} --no-restore --no-incremental -warnaserror -p:Version=${{ steps.gitversion.outputs.SemVer }}
           dotnet tool run dotnet-coverage collect "dotnet test ${{ env.SOLUTION_PATH }} --configuration ${{ env.CONFIGURATION }} -p:Version=${{ steps.gitversion.outputs.SemVer }} --no-restore --no-build --verbosity normal --filter \"FullyQualifiedName~.L0Tests.|FullyQualifiedName~.L1Tests.\"" -f xml -o "coverage.xml"
