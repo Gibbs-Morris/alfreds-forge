@@ -4,41 +4,41 @@ applyTo: 'docs/Docusaurus/docs/**/*.{md,mdx}'
 
 # Documentation Authoring
 
-Governing thought: Alfred's Forge documentation exists to help engineers make correct decisions and complete real work without invented behavior, blurred guarantees, or navigation debt.
+Governing thought: Write Alfred's Forge documentation so engineers can make correct decisions and complete real work without invented behavior or unclear guarantees.
 
-> Drift check: The public authoring model lives under `docs/Docusaurus/docs/contributing/`; update the Docusaurus guidance and matching Cursor rules with this file.
+> Drift check: The public authoring guide is `docs/Docusaurus/docs/contributing/`. Read it before changing this guidance.
 
 ## Rules (RFC 2119)
 
-- Authors **MUST** optimize for correctness, clarity, navigability, and maintainability; authors **MUST NOT** optimize for marketing tone. Why: Alfred's Forge docs are engineering guidance, not promotional copy.
-- Authors **MUST NOT** invent APIs, configuration keys, defaults, guarantees, limits, exception types, or runtime behavior. Why: Documentation is a contract surface.
-- Claims **MUST** be backed by source code, tests, verified samples, design docs, ADRs, or runtime evidence; if a claim cannot be verified, it **MUST NOT** be published as fact. Why: Truthfulness is non-negotiable.
-- Authors **MUST** distinguish guaranteed behavior, default behavior, typical behavior, implementation detail, unsupported behavior, and future intent. Why: Readers need to know what Alfred's Forge actually promises.
-- Each page **MUST** answer one primary question and **MUST** use exactly one page type. Why: Mixed page types produce confusing documents.
-- Every public page **MUST** include `title`, `description`, and `sidebar_position` in frontmatter; authors **MAY** add `sidebar_label`, `pagination_label`, `slug`, `tags`, `draft`, and `id` when needed. Why: Core metadata keeps pages navigable while allowing repo-compatible stability fields.
-- Authors **MUST** use `.md` unless the page genuinely needs MDX components. Why: Plain Markdown is easier to maintain.
-- Internal doc links **MUST** use relative Markdown links. Why: Relative links survive route and branch changes more reliably.
-- Tabs **MUST** be used only for true parallel variants such as operating system, language, or hosting mode. Why: Tabs hide information and should be reserved for real alternatives.
-- Admonitions **MUST** be used only when the note materially changes user behavior, and blank lines **MUST** be left inside them. Why: Admonitions should be high-signal and robust under formatters.
-- Mermaid **SHOULD** be preferred over screenshots for diagrams, and every diagram **MUST** include an introductory sentence and a clear main point. Why: Source diagrams are reviewable and easier to maintain.
-- Mermaid flowcharts with more than four nodes **MUST** use `flowchart TB` (top-to-bottom); `flowchart LR` **MAY** be used only when the diagram has four or fewer nodes. Why: Docs render at a fixed width and readers scroll vertically; wide LR diagrams overflow or become unreadably compressed.
-- Runnable code examples **MUST** come from verified samples, newly verified samples, or executable verification tied to tests or builds. Why: Sample drift is worse than no sample.
-- Authors **MUST** make prerequisites explicit, use plain language, avoid hype, and end pages with relevant next steps or related links. Why: Readers need clear action, not filler.
-- The distributed-systems checklist **MUST** be applied when a page describes runtime semantics, lifecycle, persistence, messaging, deployment, or failure behavior. Why: Those topics are where under-specified docs cause the most damage.
-- A documentation change **MUST NOT** be considered complete until frontmatter is complete, links resolve, the Docusaurus site builds, examples are verified, terminology is repo-consistent, and adjacent content is linked. Why: Documentation quality is part of the build contract.
+- Authors **MUST** optimize for correctness, clarity, navigation, and maintenance. Authors **MUST NOT** optimize for marketing tone. Why: These docs provide engineering guidance.
+- Authors **MUST NOT** invent APIs, configuration keys, defaults, guarantees, limits, exception types, or runtime behavior. Why: Documentation is a contract.
+- Authors **MUST** support claims with source code, tests, verified samples, design docs, ADRs, or runtime evidence. Unverified claims **MUST NOT** be published as facts. Why: Keeps documentation truthful.
+- Authors **MUST** distinguish guaranteed, default, typical, implementation-detail, unsupported, and future behavior. Why: Shows what Alfred's Forge promises.
+- Each page **MUST** answer one primary question. Each page **MUST** use one page type. Why: Prevents confusing mixed-purpose pages.
+- Every public page **MUST** include `title`, `description`, and `sidebar_position` front matter. Authors **MAY** add `sidebar_label`, `pagination_label`, `slug`, `tags`, `draft`, and `id` when needed. Why: Provides navigation metadata and supports repository stability fields.
+- Authors **MUST** use `.md` unless a page needs MDX components. Why: Plain Markdown is easier to maintain.
+- Internal links **MUST** use relative Markdown links. Why: Relative links survive route and branch changes.
+- Tabs **MUST** represent true parallel variants, such as operating systems, languages, or hosting modes. Why: Prevents tabs from hiding unrelated information.
+- Admonitions **MUST** mark notes that materially change user behavior. Authors **MUST** leave blank lines inside admonitions. Why: Keeps notes high-signal and formatter-safe.
+- Authors **SHOULD** prefer Mermaid to screenshots for diagrams. Each diagram **MUST** have an introductory sentence and a clear main point. Why: Source diagrams are reviewable and maintainable.
+- Mermaid flowcharts with more than four nodes **MUST** use `flowchart TB`. Flowcharts with four or fewer nodes **MAY** use `flowchart LR`. Why: Prevents wide diagrams from overflowing fixed-width pages.
+- Runnable examples **MUST** come from verified samples, newly verified samples, or executable checks tied to tests or builds. Why: Stale samples are worse than no samples.
+- Authors **MUST** state prerequisites. Authors **MUST** use plain language and avoid hype. Authors **MUST** end pages with relevant next steps or related links. Why: Gives readers clear action.
+- Authors **MUST** apply the distributed-systems checklist when a page describes runtime semantics, lifecycle, persistence, messaging, deployment, or failure behavior. Why: These topics need precise behavior and limits.
+- A documentation change **MUST NOT** be complete until front matter is complete, links resolve, Docusaurus builds, examples are verified, terminology matches the repository, and adjacent content is linked. Why: Documentation is part of the build contract.
 
 ## Scope and Audience
 
-All contributors and agents writing or updating public docs under `docs/Docusaurus/docs/`.
+Use these rules for all contributors and agents who write or update public docs under `docs/Docusaurus/docs/`.
 
-## At-a-Glance Quick-Start
+## Quick Start
 
-- Classify the page type before writing.
-- Verify all technical claims from repo evidence.
-- Use `title`, `description`, and `sidebar_position` frontmatter at minimum.
-- Write one page for one primary question.
-- Use Mermaid for diagrams and verified examples for runnable code.
-- Validate links and the Docusaurus build before considering the work complete.
+1. Classify the page before writing.
+2. Verify every technical claim from repository evidence.
+3. Add at least `title`, `description`, and `sidebar_position` front matter.
+4. Answer one primary question on each page.
+5. Use Mermaid and verified examples when they add value.
+6. Validate links and the Docusaurus build before completion.
 
 ## Canonical Page Types
 
@@ -54,46 +54,44 @@ All contributors and agents writing or updating public docs under `docs/Docusaur
 
 ## Core Principles
 
-- **Truth Before Style**: Verified content matters more than polished prose.
-- **Single Question Per Page**: Readers should know immediately whether they are in the right place.
-- **Page Type Is The Contract**: Physical location may migrate, but page type still governs structure and content.
-- **Evidence And Adjacency**: Every page should say what is true, what is not guaranteed, and where the reader goes next.
+- Put truth before style. Verified content matters more than polished prose.
+- Put one primary question on each page so readers can identify its purpose.
+- Treat page type as the content contract even when a page moves.
+- State what is true, what is not guaranteed, and where the reader goes next.
 
 ## Distributed-Systems Checklist
 
-Apply the relevant subset of these topics when the page describes runtime behavior:
+Apply relevant items when a page describes runtime behavior:
 
-- activation or lifecycle boundaries
-- concurrency or scheduling assumptions
-- ordering guarantees and non-guarantees
-- retry behavior and timeout behavior
-- persistence or durability semantics
-- failure handling and recovery implications
-- serialization and version compatibility implications
-- deployment or cluster assumptions
-- diagnostics or telemetry needed to validate behavior
-- security constraints
-- unsupported or dangerous patterns
+- Activation or lifecycle boundaries.
+- Concurrency or scheduling assumptions.
+- Ordering guarantees and non-guarantees.
+- Retry and timeout behavior.
+- Persistence or durability semantics.
+- Failure handling and recovery effects.
+- Serialization and version compatibility.
+- Deployment or cluster assumptions.
+- Diagnostics or telemetry needed to validate behavior.
+- Security constraints.
+- Unsupported or dangerous patterns.
 
 ## Definition of Done
 
-Before publishing, confirm that:
+Before publishing, confirm all of these conditions:
 
-- the page type is correct
-- the page scope is narrow and coherent
-- frontmatter is complete
-- internal links resolve
-- the Docusaurus site builds successfully
-- code examples are verified
-- claims about defaults, guarantees, and failure modes are evidenced
-- terminology matches the codebase
-- the page links to adjacent content
-- the page does not overclaim what Alfred's Forge guarantees
+- The page type is correct.
+- The scope is narrow and coherent.
+- Front matter is complete.
+- Internal links resolve.
+- The Docusaurus site builds successfully.
+- Code examples are verified.
+- Claims about defaults, guarantees, and failure modes have evidence.
+- Terminology matches the codebase.
+- The page links to adjacent content.
+- The page does not overclaim Alfred's Forge guarantees.
 
 ## References
 
 - Public guide: `docs/Docusaurus/docs/contributing/documentation-guide.md`
 - Markdown standards: `.github/instructions/markdown.instructions.md`
 - Shared guardrails: `.github/instructions/shared-policies.instructions.md`
-
-
